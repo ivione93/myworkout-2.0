@@ -32,7 +32,6 @@ public class NewCompetition extends AppCompatActivity {
         setContentView(R.layout.activity_new_competition);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(R.string.new_competition);
 
         AppDatabase db = Room.databaseBuilder(getApplicationContext(),
                 AppDatabase.class, "database-name").fallbackToDestructiveMigration().allowMainThreadQueries().build();
