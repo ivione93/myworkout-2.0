@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.ivione93.mynavapp.MainActivity;
 import com.ivione93.mynavapp.R;
 
 public class CompetitionsFragment extends Fragment {
@@ -28,6 +29,7 @@ public class CompetitionsFragment extends Fragment {
         btnNewCompetition = root.findViewById(R.id.btnNewCompetition);
         btnNewCompetition.setOnClickListener(v -> {
             Intent newCompetition = new Intent(getActivity(), NewCompetition.class);
+            newCompetition.putExtra("license", getActivity().getIntent().getStringExtra("license"));
             container.getContext().startActivity(newCompetition);
         });
         return root;
