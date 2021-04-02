@@ -21,4 +21,7 @@
     <string name="previous">Previous</string>
 
     <string name="new_competition">Nueva competición</string>
+    <string name="close_session">Cerrar sesión</string>
+    <string name="ultimo_entrenamiento">Último entrenamiento</string>
+    <string name="ultima_competicion">Última competición</string>
 </resources>

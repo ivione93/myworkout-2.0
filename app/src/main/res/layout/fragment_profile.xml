@@ -75,7 +75,8 @@
         android:src="@android:drawable/ic_lock_power_off"
         android:tint="#F44336"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/close_session" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/last_training"
@@ -107,12 +108,13 @@
                 android:src="@drawable/ic_trainings"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:tint="@color/white" />
+                app:tint="@color/white"
+                android:contentDescription="@string/ultimo_entrenamiento" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Último entrenamiento"
+                android:text="@string/ultimo_entrenamiento"
                 android:textSize="16sp"
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="@+id/imageView"
@@ -152,13 +154,14 @@
                 android:src="@drawable/ic_competitions"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:tint="@color/white" />
+                app:tint="@color/white"
+                android:contentDescription="@string/ultima_competicion" />
 
             <TextView
                 android:id="@+id/textView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Última competición"
+                android:text="@string/ultima_competicion"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="@+id/imageView2"
