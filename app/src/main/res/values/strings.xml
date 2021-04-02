@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">MyWorkout2</string>
+    <string name="title_profile">Perfil</string>
+    <string name="title_trainings">Entrenamientos</string>
+    <string name="title_competitions">Competiciones</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Contraseña</string>
+    <string name="action_sign_in">Entrar</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Al menos 6 caracteres</string>
+    <string name="login_failed">"No se pudo iniciar sesión"</string>
+    <string name="title_competition_new">Nueva competición</string>
+    <string name="title_activity_new_competition">NewCompetition</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="new_competition">Nueva competición</string>
+</resources>
