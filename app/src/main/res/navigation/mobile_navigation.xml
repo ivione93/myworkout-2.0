@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/navigation_profile"
-        android:name="com.ivione93.mynavapp.ui.profile.ProfileFragment"
+        android:name="com.ivione93.myworkout.ui.profile.ProfileFragment"
         android:label="@string/title_profile"
         tools:layout="@layout/fragment_profile" />
 
     <fragment
         android:id="@+id/navigation_trainings"
-        android:name="com.ivione93.mynavapp.ui.trainings.TrainingsFragment"
+        android:name="com.ivione93.myworkout.ui.trainings.TrainingsFragment"
         android:label="@string/title_trainings"
         tools:layout="@layout/fragment_trainings" />
 
     <fragment
         android:id="@+id/navigation_competitions"
-        android:name="com.ivione93.mynavapp.ui.competitions.CompetitionsFragment"
+        android:name="com.ivione93.myworkout.ui.competitions.CompetitionsFragment"
         android:label="@string/title_competitions"
         tools:layout="@layout/fragment_competitions" />
 </navigation>
