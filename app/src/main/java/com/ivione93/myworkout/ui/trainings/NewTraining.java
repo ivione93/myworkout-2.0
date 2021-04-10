@@ -6,6 +6,7 @@ import androidx.room.Room;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,7 +23,6 @@ public class NewTraining extends AppCompatActivity {
 
     TextInputLayout trainingTimeText, trainingDistanceText;
     EditText trainingDateText;
-    Button btnSaveTraining;
 
     String license;
 
@@ -33,36 +33,26 @@ public class NewTraining extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        AppDatabase db = Room.databaseBuilder(getApplicationContext(),
-                AppDatabase.class, "database-name").fallbackToDestructiveMigration().allowMainThreadQueries().build();
-
         license = getIntent().getStringExtra("license");
         initReferences();
+    }
 
-        btnSaveTraining.setOnClickListener(v -> {
-            String date = trainingDateText.getText().toString();
-            String time = trainingTimeText.getEditText().getText().toString();
-            String distance = trainingDistanceText.getEditText().getText().toString();
-
-            Warmup warmup = new Warmup(time, distance, Utils.calculatePartial(time, distance));
-            Training training = new Training(license, Utils.toDate(date), warmup);
-            db.trainingDao().insert(training);
-
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra("license", license);
-            startActivity(intent);
-        });
-
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.new_training_menu, menu);
+        return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            // Respond to the action bar's Up/Home button
-            case android.R.id.home:
-                getIntent().putExtra("license", license);
-                onBackPressed();
-                return true;
+        if (item.getItemId() == android.R.id.home) {
+            getIntent().putExtra("license", license);
+            onBackPressed();
+            return true;
+        }
+        if (item.getItemId() == R.id.menu_new_training) {
+            saveTraining();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -71,6 +61,22 @@ public class NewTraining extends AppCompatActivity {
         trainingDateText = findViewById(R.id.trainingDateText);
         trainingTimeText = findViewById(R.id.trainingTimeText);
         trainingDistanceText = findViewById(R.id.trainingDistanceText);
-        btnSaveTraining = findViewById(R.id.btnSaveTraining);
+    }
+
+    private void saveTraining() {
+        AppDatabase db = Room.databaseBuilder(getApplicationContext(),
+                AppDatabase.class, "database-name").fallbackToDestructiveMigration().allowMainThreadQueries().build();
+
+        String date = trainingDateText.getText().toString();
+        String time = trainingTimeText.getEditText().getText().toString();
+        String distance = trainingDistanceText.getEditText().getText().toString();
+
+        Warmup warmup = new Warmup(time, distance, Utils.calculatePartial(time, distance));
+        Training training = new Training(license, Utils.toDate(date), warmup);
+        db.trainingDao().insert(training);
+
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("license", license);
+        startActivity(intent);
     }
 }

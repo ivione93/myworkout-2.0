@@ -2,10 +2,14 @@ package com.ivione93.myworkout;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
@@ -21,7 +25,6 @@ public class NewAthlete extends AppCompatActivity {
 
     TextInputLayout licenseText, nameText, surnameText;
     EditText birthdateText;
-    Button btnSave, btnCancel;
 
     GoogleSignInClient mGoogleSignInClient;
     GoogleSignInOptions gso;
@@ -36,49 +39,43 @@ public class NewAthlete extends AppCompatActivity {
 
         getSupportActionBar().setTitle("Nuevo atleta");
 
-        AppDatabase db = Room.databaseBuilder(getApplicationContext(),
-                AppDatabase.class, "database-name").fallbackToDestructiveMigration().allowMainThreadQueries().build();
-
         licenseText = findViewById(R.id.licenseText);
         nameText = findViewById(R.id.nameText);
         surnameText = findViewById(R.id.trackText);
         birthdateText = findViewById(R.id.dateText);
-        btnSave = findViewById(R.id.saveButton);
-        btnCancel = findViewById(R.id.cancelButton);
+    }
 
-        btnSave.setOnClickListener(view -> {
-            String license = licenseText.getEditText().getText().toString();
-            String name = nameText.getEditText().getText().toString();
-            String surname = surnameText.getEditText().getText().toString();
-            String birthdate = birthdateText.getText().toString();
+    private void saveAthlete() {
+        AppDatabase db = Room.databaseBuilder(getApplicationContext(),
+                AppDatabase.class, "database-name").fallbackToDestructiveMigration().allowMainThreadQueries().build();
 
-            if (validateNewAthlete(license, name, surname, birthdate)) {
-                if (db.athleteDao().getAthleteByLicense(licenseText.getEditText().getText().toString()) != null) {
-                    Toast toast = Toast.makeText(getApplicationContext(), "Ya existe un atleta con esa licencia", Toast.LENGTH_LONG);
-                    toast.show();
-                } else {
+        String license = licenseText.getEditText().getText().toString();
+        String name = nameText.getEditText().getText().toString();
+        String surname = surnameText.getEditText().getText().toString();
+        String birthdate = birthdateText.getText().toString();
 
-                    Athlete athlete = new Athlete(licenseText.getEditText().getText().toString(),
-                            nameText.getEditText().getText().toString(),
-                            surnameText.getEditText().getText().toString(),
-                            birthdateText.getText().toString(),
-                            email,
-                            googleId);
-                    db.athleteDao().insert(athlete);
-
-                    Intent intent = new Intent(this, MainActivity.class);
-                    intent.putExtra("license", licenseText.getEditText().getText().toString());
-                    startActivity(intent);
-                }
-            } else {
-                Toast toast = Toast.makeText(getApplicationContext(), "Faltan campos por completar", Toast.LENGTH_LONG);
+        if (validateNewAthlete(license, name, surname, birthdate)) {
+            if (db.athleteDao().getAthleteByLicense(licenseText.getEditText().getText().toString()) != null) {
+                Toast toast = Toast.makeText(getApplicationContext(), "Ya existe un atleta con esa licencia", Toast.LENGTH_LONG);
                 toast.show();
-            }
-        });
+            } else {
 
-        btnCancel.setOnClickListener(v -> {
-            finish();
-        });
+                Athlete athlete = new Athlete(licenseText.getEditText().getText().toString(),
+                        nameText.getEditText().getText().toString(),
+                        surnameText.getEditText().getText().toString(),
+                        birthdateText.getText().toString(),
+                        email,
+                        googleId);
+                db.athleteDao().insert(athlete);
+
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.putExtra("license", licenseText.getEditText().getText().toString());
+                startActivity(intent);
+            }
+        } else {
+            Toast toast = Toast.makeText(getApplicationContext(), "Faltan campos por completar", Toast.LENGTH_LONG);
+            toast.show();
+        }
     }
 
     @Override
@@ -111,6 +108,25 @@ public class NewAthlete extends AppCompatActivity {
             }
         }
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.new_athlete_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.menu_new_athlete) {
+            saveAthlete();
+            return true;
+        }
+        if (item.getItemId() == R.id.menu_cancel_new_athlete) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private boolean validateNewAthlete(String license, String name, String surname, String birthdate) {
