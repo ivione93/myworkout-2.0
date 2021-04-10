@@ -106,6 +106,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.menu_profile_options) {
+
             return true;
         }
         if (item.getItemId() == R.id.menu_log_out) {

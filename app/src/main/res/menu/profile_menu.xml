@@ -6,7 +6,13 @@
         android:title="New"
         android:icon="@drawable/ic_menu"
         android:iconTint="@color/white"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom" >
+
+        <menu>
+            <item android:id="@+id/menu_edit_profile"
+                android:title="Editar" />
+        </menu>
+    </item>
 
     <item android:id="@+id/menu_log_out"
         android:title="New"
