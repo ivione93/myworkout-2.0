@@ -2,6 +2,7 @@ package com.ivione93.myworkout.ui.login;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -10,6 +11,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.StringRes;
@@ -34,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
     private LoginViewModel loginViewModel;
 
     private GoogleSignInClient mGoogleSignInClient;
+    private TextView createdBy;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,6 +68,15 @@ public class LoginActivity extends AppCompatActivity {
         signInButton.setSize(SignInButton.SIZE_WIDE);
 
         findViewById(R.id.sign_in_button).setOnClickListener(v -> signIn());
+
+        createdBy = findViewById(R.id.createdBy);
+        createdBy.setOnClickListener(v -> {
+            String url = "https://ivione93.github.io/cv-online/";
+            Uri uri = Uri.parse(url);
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(uri);
+            startActivity(intent);
+        });
 
         loginViewModel.getLoginFormState().observe(this, loginFormState -> {
             if (loginFormState == null) {
