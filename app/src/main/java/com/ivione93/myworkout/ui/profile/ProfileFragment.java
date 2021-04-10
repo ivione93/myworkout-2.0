@@ -3,6 +3,9 @@ package com.ivione93.myworkout.ui.profile;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -38,7 +41,6 @@ public class ProfileFragment extends Fragment {
     TextView nameProfile, emailProfile, birthProfile, licenseProfile;
     TextView last_competition_name, last_competition_place, last_competition_date, last_competition_track, last_competition_result;
     TextView title_training, last_training_date, title_time, title_distance, title_partial, last_training_time, last_training_distance, last_training_partial;
-    ImageButton btnSignOut;
 
     GoogleSignInClient mGoogleSignInClient;
     GoogleSignInOptions gso;
@@ -53,6 +55,8 @@ public class ProfileFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_profile, container, false);
         homeViewModel.getText().observe(getViewLifecycleOwner(), s -> {});
 
+        setHasOptionsMenu(true);
+
         db = Room.databaseBuilder(getContext(),
                 AppDatabase.class, "database-name").fallbackToDestructiveMigration().allowMainThreadQueries().build();
 
@@ -62,8 +66,6 @@ public class ProfileFragment extends Fragment {
 
         getLastCompetition(db, license);
         getLastTraining(db, license);
-
-        btnSignOut.setOnClickListener(v -> signOut() );
 
         return root;
     }
@@ -95,13 +97,30 @@ public class ProfileFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.profile_menu, menu);
+        super.onCreateOptionsMenu(menu,inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.menu_profile_options) {
+            return true;
+        }
+        if (item.getItemId() == R.id.menu_log_out) {
+            signOut();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void initReferences(View root) {
         photoProfile = root.findViewById(R.id.photoProfile);
         nameProfile = root.findViewById(R.id.nameProfile);
         emailProfile = root.findViewById(R.id.emailProfile);
         birthProfile = root.findViewById(R.id.birthProfile);
         licenseProfile = root.findViewById(R.id.licenseProfile);
-        btnSignOut = root.findViewById(R.id.btnSignOut);
 
         last_competition_name = root.findViewById(R.id.last_competition_name);
         last_competition_place = root.findViewById(R.id.last_competition_place);

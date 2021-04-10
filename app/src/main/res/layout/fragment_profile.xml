@@ -26,10 +26,8 @@
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:textSize="24sp"
-        app:layout_constraintEnd_toStartOf="@+id/btnSignOut"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/photoProfile"
         app:layout_constraintTop_toTopOf="@+id/photoProfile"
@@ -63,20 +61,6 @@
         app:layout_constraintStart_toEndOf="@+id/licenseProfile"
         app:layout_constraintTop_toBottomOf="@+id/emailProfile"
         tools:text="birthdate" />
-
-    <ImageButton
-        android:id="@+id/btnSignOut"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:background="@null"
-        android:src="@android:drawable/ic_lock_power_off"
-        android:tint="#F44336"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/close_session" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/last_training"
