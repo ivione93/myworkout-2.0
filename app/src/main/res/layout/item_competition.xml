@@ -75,7 +75,7 @@
             tools:text="18/06/2020" />
 
         <TextView
-            android:id="@+id/trackText"
+            android:id="@+id/surnameText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -92,11 +92,11 @@
             android:text="55.95"
             android:textSize="24dp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/trackText"
+            app:layout_constraintBottom_toBottomOf="@+id/surnameText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.88"
-            app:layout_constraintStart_toEndOf="@+id/trackText"
-            app:layout_constraintTop_toTopOf="@+id/trackText" />
+            app:layout_constraintStart_toEndOf="@+id/surnameText"
+            app:layout_constraintTop_toTopOf="@+id/surnameText" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

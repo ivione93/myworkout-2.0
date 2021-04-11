@@ -3,9 +3,7 @@ package com.ivione93.myworkout;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -21,7 +19,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.ivione93.myworkout.db.AppDatabase;
 import com.ivione93.myworkout.db.Athlete;
 
-public class NewAthlete extends AppCompatActivity {
+public class NewAthleteActivity extends AppCompatActivity {
 
     TextInputLayout licenseText, nameText, surnameText;
     EditText birthdateText;
@@ -41,7 +39,7 @@ public class NewAthlete extends AppCompatActivity {
 
         licenseText = findViewById(R.id.licenseText);
         nameText = findViewById(R.id.nameText);
-        surnameText = findViewById(R.id.trackText);
+        surnameText = findViewById(R.id.surnameText);
         birthdateText = findViewById(R.id.dateText);
     }
 

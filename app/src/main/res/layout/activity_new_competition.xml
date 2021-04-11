@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.competitions.NewCompetition">
+    tools:context=".ui.competitions.NewCompetitionActivity">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/placeText"
@@ -65,7 +65,7 @@
         app:layout_constraintTop_toBottomOf="@+id/competitionNameText" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/trackText"
+        android:id="@+id/surnameText"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -96,8 +96,8 @@
         android:layout_marginRight="8dp"
         android:hint="Marca"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/trackText"
-        app:layout_constraintTop_toTopOf="@+id/trackText">
+        app:layout_constraintStart_toEndOf="@+id/surnameText"
+        app:layout_constraintTop_toTopOf="@+id/surnameText">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextResult"

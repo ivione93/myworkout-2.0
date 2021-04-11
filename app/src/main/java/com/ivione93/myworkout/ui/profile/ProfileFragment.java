@@ -1,6 +1,7 @@
 package com.ivione93.myworkout.ui.profile;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -8,11 +9,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.room.Room;
 
@@ -35,7 +37,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileFragment extends Fragment {
 
-    private ProfileViewModel homeViewModel;
+    private ProfileViewModel profileViewModel;
 
     CircleImageView photoProfile;
     TextView nameProfile, emailProfile, birthProfile, licenseProfile;
@@ -47,13 +49,14 @@ public class ProfileFragment extends Fragment {
 
     AppDatabase db;
     String license;
+    Uri photoUrl;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        homeViewModel =
+        profileViewModel =
                 new ViewModelProvider(this).get(ProfileViewModel.class);
         View root = inflater.inflate(R.layout.fragment_profile, container, false);
-        homeViewModel.getText().observe(getViewLifecycleOwner(), s -> {});
+        profileViewModel.getText().observe(getViewLifecycleOwner(), s -> {});
 
         setHasOptionsMenu(true);
 
@@ -88,6 +91,7 @@ public class ProfileFragment extends Fragment {
 
         if(account != null) {
             if (account.getPhotoUrl() != null) {
+                photoUrl = account.getPhotoUrl();
                 Glide.with(getView()).load(account.getPhotoUrl()).into(photoProfile);
             }
             nameProfile.setText(athlete.name + " " + athlete.surname);
@@ -105,8 +109,11 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.menu_profile_options) {
-
+        if (item.getItemId() == R.id.menu_edit_profile) {
+            Intent editProfile = new Intent(getActivity(), EditProfileActivity.class);
+            editProfile.putExtra("license", license);
+            editProfile.putExtra("photoUrl", photoUrl.toString());
+            getContext().startActivity(editProfile);
             return true;
         }
         if (item.getItemId() == R.id.menu_log_out) {

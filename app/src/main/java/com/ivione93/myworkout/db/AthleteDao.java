@@ -4,6 +4,7 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import java.util.List;
 
@@ -21,6 +22,9 @@ public interface AthleteDao {
 
     @Insert
     void insert(Athlete athlete);
+
+    @Query("UPDATE athlete SET name = :name, surname = :surname, birthdate = :birth WHERE license = :license")
+    void update(String name, String surname, String birth, String license);
 
     @Delete
     void delete(Athlete athlete);

@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -19,7 +18,7 @@ import com.ivione93.myworkout.Utils;
 import com.ivione93.myworkout.db.AppDatabase;
 import com.ivione93.myworkout.db.Competition;
 
-public class NewCompetition extends AppCompatActivity {
+public class NewCompetitionActivity extends AppCompatActivity {
 
     TextInputLayout placeText, competitionNameText, trackText, resultText;
     EditText dateText;
@@ -61,7 +60,7 @@ public class NewCompetition extends AppCompatActivity {
     private void initReferences() {
         placeText = findViewById(R.id.placeText);
         competitionNameText = findViewById(R.id.competitionNameText);
-        trackText = findViewById(R.id.trackText);
+        trackText = findViewById(R.id.surnameText);
         resultText = findViewById(R.id.resultText);
         placeText = findViewById(R.id.placeText);
         dateText = findViewById(R.id.dateText);

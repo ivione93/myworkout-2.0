@@ -52,7 +52,7 @@ public class CompetitionsFragment extends Fragment {
 
         btnNewCompetition = root.findViewById(R.id.btnNewCompetition);
         btnNewCompetition.setOnClickListener(v -> {
-            Intent newCompetition = new Intent(getActivity(), NewCompetition.class);
+            Intent newCompetition = new Intent(getActivity(), NewCompetitionActivity.class);
             newCompetition.putExtra("license", license);
             container.getContext().startActivity(newCompetition);
         });

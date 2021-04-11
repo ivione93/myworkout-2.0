@@ -16,10 +16,7 @@ import androidx.room.Room;
 
 import com.ivione93.myworkout.R;
 import com.ivione93.myworkout.db.AppDatabase;
-import com.ivione93.myworkout.db.Competition;
 import com.ivione93.myworkout.db.Training;
-import com.ivione93.myworkout.ui.competitions.AdapterCompetition;
-import com.ivione93.myworkout.ui.competitions.NewCompetition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +53,7 @@ public class TrainingsFragment extends Fragment {
 
         btnNewTraining = root.findViewById(R.id.btnNewTraining);
         btnNewTraining.setOnClickListener(v -> {
-            Intent newTraining = new Intent(getActivity(), NewTraining.class);
+            Intent newTraining = new Intent(getActivity(), NewTrainingActivity.class);
             newTraining.putExtra("license", license);
             container.getContext().startActivity(newTraining);
         });

@@ -19,7 +19,7 @@ import com.ivione93.myworkout.db.AppDatabase;
 import com.ivione93.myworkout.db.Training;
 import com.ivione93.myworkout.db.Warmup;
 
-public class NewTraining extends AppCompatActivity {
+public class NewTrainingActivity extends AppCompatActivity {
 
     TextInputLayout trainingTimeText, trainingDistanceText;
     EditText trainingDateText;

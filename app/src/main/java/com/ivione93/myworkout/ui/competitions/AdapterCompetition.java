@@ -48,7 +48,7 @@ public class AdapterCompetition extends RecyclerView.Adapter<AdapterCompetition.
             super(itemView);
             name = itemView.findViewById(R.id.competitionNameText);
             place = itemView.findViewById(R.id.placeText);
-            track = itemView.findViewById(R.id.trackText);
+            track = itemView.findViewById(R.id.surnameText);
             result = itemView.findViewById(R.id.resultText);
             date = itemView.findViewById(R.id.dateText);
         }

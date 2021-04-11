@@ -25,7 +25,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.SignInButton;
 import com.ivione93.myworkout.MainActivity;
-import com.ivione93.myworkout.NewAthlete;
+import com.ivione93.myworkout.NewAthleteActivity;
 import com.ivione93.myworkout.R;
 
 import java.util.Objects;
@@ -181,7 +181,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void updateUI() {
-        Intent mainIntent = new Intent(this, NewAthlete.class);
+        Intent mainIntent = new Intent(this, NewAthleteActivity.class);
         mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(mainIntent);
     }
