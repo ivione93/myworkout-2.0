@@ -105,13 +105,4 @@
             android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Spinner
-        android:id="@+id/spinnerTracks"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="@+id/surnameText"
-        app:layout_constraintStart_toStartOf="@+id/surnameText"
-        app:layout_constraintTop_toBottomOf="@+id/surnameText" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

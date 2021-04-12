@@ -23,7 +23,10 @@ public class NewCompetitionActivity extends AppCompatActivity {
     TextInputLayout placeText, competitionNameText, trackText, resultText;
     EditText dateText;
 
+    AppDatabase db;
     String license;
+    Long id;
+    Boolean isNew;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +36,9 @@ public class NewCompetitionActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         license = getIntent().getStringExtra("license");
+        isNew = getIntent().getBooleanExtra("isNew", true);
 
-        initReferences();
+        initReferences(isNew);
     }
 
     @Override
@@ -51,25 +55,39 @@ public class NewCompetitionActivity extends AppCompatActivity {
             return true;
         }
         if (item.getItemId() == R.id.menu_new_competition) {
-            saveCompetition();
+            saveCompetition(isNew);
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void initReferences() {
+    private void initReferences(boolean isNew) {
         placeText = findViewById(R.id.placeText);
         competitionNameText = findViewById(R.id.competitionNameText);
         trackText = findViewById(R.id.surnameText);
         resultText = findViewById(R.id.resultText);
         placeText = findViewById(R.id.placeText);
         dateText = findViewById(R.id.dateText);
-    }
 
-    private void saveCompetition() {
-        AppDatabase db = Room.databaseBuilder(getApplicationContext(),
+        db = Room.databaseBuilder(getApplicationContext(),
                 AppDatabase.class, "database-name").fallbackToDestructiveMigration().allowMainThreadQueries().build();
 
+        if (!isNew) {
+            loadCompetition();
+        }
+    }
+
+    private void loadCompetition() {
+        id = getIntent().getLongExtra("id", 0);
+        Competition competition = db.competitionDao().getCompetitionToEdit(license, id);
+        placeText.getEditText().setText(competition.place);
+        competitionNameText.getEditText().setText(competition.name);
+        trackText.getEditText().setText(competition.track);
+        resultText.getEditText().setText(competition.result);
+        dateText.setText(Utils.toString(competition.date));
+    }
+
+    private void saveCompetition(Boolean isNew) {
         String place = placeText.getEditText().getText().toString();
         String competitionName = competitionNameText.getEditText().getText().toString();
         String track = trackText.getEditText().getText().toString();
@@ -83,7 +101,12 @@ public class NewCompetitionActivity extends AppCompatActivity {
                     Utils.toDate(dateText.getText().toString()),
                     trackText.getEditText().getText().toString(),
                     resultText.getEditText().getText().toString());
-            db.competitionDao().insert(competition);
+            if (isNew) {
+                db.competitionDao().insert(competition);
+            } else {
+                db.competitionDao().update(competition.place, competition.name, competition.track, competition.result, competition.date,
+                        competition.license, id);
+            }
 
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra("license", license);

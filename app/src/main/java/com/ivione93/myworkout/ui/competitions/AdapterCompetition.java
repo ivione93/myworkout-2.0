@@ -1,17 +1,25 @@
 package com.ivione93.myworkout.ui.competitions;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import com.ivione93.myworkout.R;
 import com.ivione93.myworkout.Utils;
+import com.ivione93.myworkout.db.AppDatabase;
 import com.ivione93.myworkout.db.Competition;
 
 import java.util.ArrayList;
@@ -36,11 +44,38 @@ public class AdapterCompetition extends RecyclerView.Adapter<AdapterCompetition.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolderCompetitions holder, int position) {
+        AppDatabase db = Room.databaseBuilder(holder.itemView.getContext(),
+                AppDatabase.class, "database-name").fallbackToDestructiveMigration().allowMainThreadQueries().build();
+
         holder.name.setText(listCompetitions.get(position).name);
         holder.place.setText(listCompetitions.get(position).place);
         holder.track.setText(listCompetitions.get(position).track);
         holder.result.setText(listCompetitions.get(position).result);
         holder.date.setText(Utils.toString(listCompetitions.get(position).date));
+
+        holder.ibOptions.setOnClickListener(v -> {
+            PopupMenu popup = new PopupMenu(holder.itemView.getContext(), holder.ibOptions);
+            popup.inflate(R.menu.item_competition_menu);
+            popup.setOnMenuItemClickListener(item -> {
+                switch (item.getItemId()) {
+                    case R.id.menu_edit_competition:
+                        Intent newCompetition = new Intent((Activity) holder.itemView.getContext(), NewCompetitionActivity.class);
+                        newCompetition.putExtra("isNew", false);
+                        newCompetition.putExtra("license", listCompetitions.get(position).license);
+                        newCompetition.putExtra("id", listCompetitions.get(position).id);
+                        holder.itemView.getContext().startActivity(newCompetition);
+                        return true;
+                    case R.id.menu_delete_competition:
+                        db.competitionDao().deleteCompetitionByLicense(listCompetitions.get(position).license, listCompetitions.get(position).id);
+                        listCompetitions.remove(position);
+                        notifyItemRemoved(position);
+                        return true;
+                    default:
+                        return false;
+                }
+            });
+            popup.show();
+        });
     }
 
     @Override
@@ -85,6 +120,7 @@ public class AdapterCompetition extends RecyclerView.Adapter<AdapterCompetition.
 
     public class ViewHolderCompetitions extends RecyclerView.ViewHolder {
         TextView name, place, track, result, date;
+        ImageButton ibOptions;
 
         public ViewHolderCompetitions(@NonNull View itemView) {
             super(itemView);
@@ -93,6 +129,7 @@ public class AdapterCompetition extends RecyclerView.Adapter<AdapterCompetition.
             track = itemView.findViewById(R.id.surnameText);
             result = itemView.findViewById(R.id.resultText);
             date = itemView.findViewById(R.id.dateText);
+            ibOptions = itemView.findViewById(R.id.ibOptions);
         }
     }
 }

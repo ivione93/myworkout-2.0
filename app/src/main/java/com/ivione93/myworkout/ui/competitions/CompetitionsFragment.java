@@ -83,6 +83,7 @@ public class CompetitionsFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.menu_add_competition) {
             Intent newCompetition = new Intent(getActivity(), NewCompetitionActivity.class);
+            newCompetition.putExtra("isNew", true);
             newCompetition.putExtra("license", license);
             getContext().startActivity(newCompetition);
         }
