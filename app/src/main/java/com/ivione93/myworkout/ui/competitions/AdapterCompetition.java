@@ -3,6 +3,8 @@ package com.ivione93.myworkout.ui.competitions;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,13 +14,18 @@ import com.ivione93.myworkout.R;
 import com.ivione93.myworkout.Utils;
 import com.ivione93.myworkout.db.Competition;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class AdapterCompetition extends RecyclerView.Adapter<AdapterCompetition.ViewHolderCompetitions> {
+public class AdapterCompetition extends RecyclerView.Adapter<AdapterCompetition.ViewHolderCompetitions> implements Filterable {
 
     List<Competition> listCompetitions;
+    List<Competition> listCompetitionsFull;
 
-    public AdapterCompetition(List<Competition> listCompetitions) { this.listCompetitions = listCompetitions; }
+    public AdapterCompetition(List<Competition> listCompetitions) {
+        this.listCompetitions = listCompetitions;
+        listCompetitionsFull = new ArrayList<>(listCompetitions);
+    }
 
     @NonNull
     @Override
@@ -40,6 +47,41 @@ public class AdapterCompetition extends RecyclerView.Adapter<AdapterCompetition.
     public int getItemCount() {
         return listCompetitions.size();
     }
+
+    @Override
+    public Filter getFilter() {
+        return filter;
+    }
+
+    private Filter filter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Competition> filteredCompetitions = new ArrayList<>();
+            if (constraint == null || constraint.length() == 0) {
+                filteredCompetitions.addAll(listCompetitionsFull);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+                for (Competition competition : listCompetitionsFull) {
+                    if (competition.name.toLowerCase().contains(filterPattern) ||
+                            competition.place.toLowerCase().contains(filterPattern)) {
+                        filteredCompetitions.add(competition);
+                    }
+                }
+            }
+            FilterResults results = new FilterResults();
+            results.values = filteredCompetitions;
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            listCompetitions.clear();
+            listCompetitions.addAll((List) results.values);
+            notifyDataSetChanged();
+        }
+
+    };
 
     public class ViewHolderCompetitions extends RecyclerView.ViewHolder {
         TextView name, place, track, result, date;
