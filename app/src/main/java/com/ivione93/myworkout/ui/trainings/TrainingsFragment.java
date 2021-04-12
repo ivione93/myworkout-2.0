@@ -3,6 +3,9 @@ package com.ivione93.myworkout.ui.trainings;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -17,6 +20,8 @@ import androidx.room.Room;
 import com.ivione93.myworkout.R;
 import com.ivione93.myworkout.db.AppDatabase;
 import com.ivione93.myworkout.db.Training;
+import com.ivione93.myworkout.ui.competitions.AdapterCompetition;
+import com.ivione93.myworkout.ui.competitions.NewCompetitionActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,13 +30,11 @@ public class TrainingsFragment extends Fragment {
 
     private TrainingsViewModel dashboardViewModel;
 
-    public static List<Training> listTrainings = new ArrayList<>();
-
-    RecyclerView rvTrainings;
-    AdapterTraining adapterTraining = new AdapterTraining(listTrainings);
-    ImageButton btnNewTraining;
+    private List<Training> listTrainings = new ArrayList<>();
+    private AdapterTraining adapterTraining;
 
     String license;
+    AppDatabase db;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -40,26 +43,42 @@ public class TrainingsFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_trainings, container, false);
         dashboardViewModel.getText().observe(getViewLifecycleOwner(), s -> {});
 
-        AppDatabase db = Room.databaseBuilder(root.getContext(),
+        setHasOptionsMenu(true);
+
+        db = Room.databaseBuilder(root.getContext(),
                 AppDatabase.class, "database-name").fallbackToDestructiveMigration().allowMainThreadQueries().build();
 
-        rvTrainings = root.findViewById(R.id.rvTrainings);
-        rvTrainings.setLayoutManager(new LinearLayoutManager(root.getContext()));
-
         license = getActivity().getIntent().getStringExtra("license");
-
         listTrainings.clear();
         listTrainings.addAll(db.trainingDao().getTrainingByLicense(license));
 
-        btnNewTraining = root.findViewById(R.id.btnNewTraining);
-        btnNewTraining.setOnClickListener(v -> {
-            Intent newTraining = new Intent(getActivity(), NewTrainingActivity.class);
-            newTraining.putExtra("license", license);
-            container.getContext().startActivity(newTraining);
-        });
-
-        rvTrainings.setAdapter(adapterTraining);
+        setUpRecyclerView(root);
 
         return root;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.list_training_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.menu_add_training) {
+            Intent newTraining = new Intent(getActivity(), NewTrainingActivity.class);
+            newTraining.putExtra("license", license);
+            getContext().startActivity(newTraining);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void setUpRecyclerView(View root) {
+        RecyclerView rvTrainings = root.findViewById(R.id.rvTrainings);
+        rvTrainings.setHasFixedSize(true);
+        adapterTraining = new AdapterTraining(listTrainings);
+
+        rvTrainings.setLayoutManager(new LinearLayoutManager(root.getContext()));
+        rvTrainings.setAdapter(adapterTraining);
     }
 }

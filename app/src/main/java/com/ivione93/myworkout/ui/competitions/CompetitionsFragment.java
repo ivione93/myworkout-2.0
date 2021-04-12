@@ -34,8 +34,6 @@ public class CompetitionsFragment extends Fragment {
     private List<Competition> listCompetitions = new ArrayList<>();
     private AdapterCompetition adapterCompetition;
 
-    ImageButton btnNewCompetition;
-
     AppDatabase db;
     String license;
 
@@ -57,23 +55,7 @@ public class CompetitionsFragment extends Fragment {
 
         setUpRecyclerView(root);
 
-        btnNewCompetition = root.findViewById(R.id.btnNewCompetition);
-        btnNewCompetition.setOnClickListener(v -> {
-            Intent newCompetition = new Intent(getActivity(), NewCompetitionActivity.class);
-            newCompetition.putExtra("license", license);
-            container.getContext().startActivity(newCompetition);
-        });
-
         return root;
-    }
-
-    private void setUpRecyclerView(View root) {
-        RecyclerView rvCompetitions = root.findViewById(R.id.rvCompetitions);
-        rvCompetitions.setHasFixedSize(true);
-        adapterCompetition = new AdapterCompetition(listCompetitions);
-
-        rvCompetitions.setLayoutManager(new LinearLayoutManager(root.getContext()));
-        rvCompetitions.setAdapter(adapterCompetition);
     }
 
     @Override
@@ -95,5 +77,24 @@ public class CompetitionsFragment extends Fragment {
             }
         });
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.menu_add_competition) {
+            Intent newCompetition = new Intent(getActivity(), NewCompetitionActivity.class);
+            newCompetition.putExtra("license", license);
+            getContext().startActivity(newCompetition);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void setUpRecyclerView(View root) {
+        RecyclerView rvCompetitions = root.findViewById(R.id.rvCompetitions);
+        rvCompetitions.setHasFixedSize(true);
+        adapterCompetition = new AdapterCompetition(listCompetitions);
+
+        rvCompetitions.setLayoutManager(new LinearLayoutManager(root.getContext()));
+        rvCompetitions.setAdapter(adapterCompetition);
     }
 }
