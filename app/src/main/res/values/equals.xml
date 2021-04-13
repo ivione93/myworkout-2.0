@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+        <string-array name="equals">
+            <item>Menor</item>
+            <item>Igual</item>
+            <item>Mayor</item>
+        </string-array>
+
+</resources>

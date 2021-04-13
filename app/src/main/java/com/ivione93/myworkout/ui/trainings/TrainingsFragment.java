@@ -1,5 +1,6 @@
 package com.ivione93.myworkout.ui.trainings;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,7 +9,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -20,8 +20,6 @@ import androidx.room.Room;
 import com.ivione93.myworkout.R;
 import com.ivione93.myworkout.db.AppDatabase;
 import com.ivione93.myworkout.db.Training;
-import com.ivione93.myworkout.ui.competitions.AdapterCompetition;
-import com.ivione93.myworkout.ui.competitions.NewCompetitionActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +67,21 @@ public class TrainingsFragment extends Fragment {
             Intent newTraining = new Intent(getActivity(), NewTrainingActivity.class);
             newTraining.putExtra("license", license);
             getContext().startActivity(newTraining);
+        }
+        if (item.getItemId() == R.id.menu_filter_training) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            LayoutInflater inflater = requireActivity().getLayoutInflater();
+
+            builder.setTitle("Filtros de búsqueda");
+            builder.setView(inflater.inflate(R.layout.dialog_filter, null))
+                .setPositiveButton("Aceptar", (dialog, which) -> {
+
+                })
+                .setNegativeButton("Cancelar", (dialog, which) -> {
+
+                });
+            builder.create();
+            builder.show();
         }
         return super.onOptionsItemSelected(item);
     }
