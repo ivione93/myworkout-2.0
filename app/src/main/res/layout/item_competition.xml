@@ -102,6 +102,7 @@
             android:text="55.95"
             android:textSize="24dp"
             android:textStyle="bold"
+            android:textColor="@color/blue_primary"
             app:layout_constraintBottom_toBottomOf="@+id/surnameText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.88"

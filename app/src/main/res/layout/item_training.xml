@@ -91,6 +91,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/title_time"
             android:textSize="18sp"
+            android:textColor="@color/blue_primary"
             android:text="40 min" />
 
         <TextView
@@ -99,6 +100,7 @@
             android:layout_height="wrap_content"
             android:text="10 km"
             android:textSize="18sp"
+            android:textColor="@color/blue_primary"
             app:layout_constraintEnd_toEndOf="@+id/title_distance"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/title_distance"
@@ -110,6 +112,7 @@
             android:layout_height="wrap_content"
             android:text="4:00 /km"
             android:textSize="18sp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="@+id/title_partial"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="@+id/title_partial"

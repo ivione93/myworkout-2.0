@@ -13,7 +13,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
-        app:civ_border_color="#606060"
+        app:civ_border_color="@color/cardview_dark_background"
         app:civ_border_width="2dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -21,17 +21,22 @@
 
     <TextView
         android:id="@+id/nameProfile"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:lines="1"
+        android:maxLines="1"
+        android:textColor="@color/blue_primary"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/photoProfile"
         app:layout_constraintTop_toTopOf="@+id/photoProfile"
-        tools:text="Name" />
+        tools:text="Iván García Gómez" />
 
     <TextView
         android:id="@+id/emailProfile"
@@ -71,7 +76,6 @@
         android:layout_marginTop="64dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:backgroundTint="#D0424242"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/photoProfile">
@@ -92,7 +96,6 @@
                 android:src="@drawable/ic_trainings"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:tint="@color/white"
                 android:contentDescription="@string/ultimo_entrenamiento" />
 
             <TextView
@@ -100,7 +103,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/ultimo_entrenamiento"
-                android:textColor="@color/white"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="@+id/imageView"
                 app:layout_constraintStart_toEndOf="@+id/imageView"
@@ -111,7 +113,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="02/04/2021"
-                android:textColor="@color/white"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="@+id/title_last_training"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -159,7 +160,8 @@
                 android:layout_marginRight="32dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/title_time"
-                android:text="Media" />
+                android:text="Media"
+                />
 
             <TextView
                 android:id="@+id/last_training_time"
@@ -170,6 +172,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/title_time"
                 android:textSize="18sp"
+                android:textColor="@color/blue_primary"
                 tools:text="40 min" />
 
             <TextView
@@ -177,6 +180,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
+                android:textColor="@color/blue_primary"
                 app:layout_constraintEnd_toEndOf="@+id/title_distance"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/title_distance"
@@ -192,6 +196,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/last_training_time"
                 android:textSize="18sp"
+                android:textStyle="bold"
                 tools:text="4:00 /km" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -206,7 +211,6 @@
         android:layout_marginTop="32dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:backgroundTint="@color/cardview_dark_background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/last_training">
@@ -227,7 +231,6 @@
                 android:src="@drawable/ic_competitions"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:tint="@color/white"
                 android:contentDescription="@string/ultima_competicion" />
 
             <TextView
@@ -235,7 +238,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/ultima_competicion"
-                android:textColor="@color/white"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="@+id/imageView2"
                 app:layout_constraintStart_toEndOf="@+id/imageView2"
@@ -247,7 +249,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:maxLines="1"
-                android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -263,7 +264,6 @@
                 android:layout_marginLeft="24dp"
                 android:layout_marginTop="24dp"
                 android:maxLines="1"
-                android:textColor="@color/white"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toStartOf="@+id/last_competition_result"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -276,7 +276,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:textColor="@color/white"
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="@+id/last_competition_place"
                 app:layout_constraintTop_toBottomOf="@+id/last_competition_place"
@@ -287,7 +286,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:textColor="@color/white"
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="@+id/last_competition_date"
                 app:layout_constraintTop_toBottomOf="@+id/last_competition_date"
@@ -299,9 +297,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="24dp"
                 android:layout_marginRight="24dp"
-                android:textColor="@color/white"
                 android:textSize="30sp"
                 android:textStyle="bold"
+                android:textColor="@color/blue_primary"
                 app:layout_constraintBottom_toBottomOf="@+id/last_competition_track"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/last_competition_place"
