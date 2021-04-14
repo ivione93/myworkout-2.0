@@ -13,20 +13,50 @@
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="32dp"
-        android:text="Mes:"
+        android:text="Fecha inicio"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Spinner
-        android:id="@+id/filterMonthCompetition"
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="Fecha fin"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView6"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.44"
+        app:layout_constraintStart_toEndOf="@+id/textView6"
+        app:layout_constraintTop_toTopOf="@+id/textView6" />
+
+    <EditText
+        android:id="@+id/filterStartDateCompetition"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:entries="@array/months"
-        app:layout_constraintBottom_toBottomOf="@+id/textView6"
-        app:layout_constraintEnd_toEndOf="@+id/filterTrackCompetition"
-        app:layout_constraintStart_toStartOf="@+id/filterTrackCompetition"
-        app:layout_constraintTop_toTopOf="@+id/textView6" />
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:hint="inicio"
+        android:inputType="date"
+        app:layout_constraintEnd_toStartOf="@+id/filterEndDateCompetition"
+        app:layout_constraintStart_toStartOf="@+id/textView6"
+        app:layout_constraintTop_toBottomOf="@+id/textView6" />
+
+    <EditText
+        android:id="@+id/filterEndDateCompetition"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:hint="fin"
+        android:inputType="date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <TextView
         android:id="@+id/textView4"
@@ -38,7 +68,7 @@
         android:text="Prueba:"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/filterMonthCompetition" />
+        app:layout_constraintTop_toBottomOf="@+id/filterStartDateCompetition" />
 
     <EditText
         android:id="@+id/filterTrackCompetition"

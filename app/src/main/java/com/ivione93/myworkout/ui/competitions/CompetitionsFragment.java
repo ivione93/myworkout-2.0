@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
@@ -21,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import com.ivione93.myworkout.R;
+import com.ivione93.myworkout.Utils;
 import com.ivione93.myworkout.db.AppDatabase;
 import com.ivione93.myworkout.db.Competition;
 
@@ -117,29 +119,33 @@ public class CompetitionsFragment extends Fragment {
             });
 
         return builder.create();
-
     }
 
     private void applyFilters(View v) {
-        Spinner monthSpinner = v.findViewById(R.id.filterMonthCompetition);
-        EditText filterTrackCompetition = v.findViewById(R.id.filterTrackCompetition);
+        EditText filterStartDateCompetition, filterEndDateCompetition;
+        filterStartDateCompetition = v.findViewById(R.id.filterStartDateCompetition);
+        filterEndDateCompetition = v.findViewById(R.id.filterEndDateCompetition);
+        String filterStartDate = filterStartDateCompetition.getText().toString();
+        String filterEndDate = filterEndDateCompetition.getText().toString();
 
-        int monthSelected = monthSpinner.getSelectedItemPosition();
+        EditText filterTrackCompetition = v.findViewById(R.id.filterTrackCompetition);
         String filterTrack = filterTrackCompetition.getText().toString();
 
-        if (monthSelected == 0) {
+        if (filterStartDate.equals("") && filterEndDate.equals("")) {
             if (!filterTrack.equals("")) {
                 listCompetitions.clear();
                 listCompetitions.addAll(db.competitionDao().getCompetitionsByTrack(license, filterTrack));
             }
-        } else {
+        } else if (!filterStartDate.equals("") && !filterEndDate.equals("")){
             if (filterTrack.equals("")) {
                 listCompetitions.clear();
-                listCompetitions.addAll(db.competitionDao().getCompetitionsByMonth(license, monthSelected));
+                listCompetitions.addAll(db.competitionDao().getCompetitionsByMonth(license, Utils.toDate(filterStartDate), Utils.toDate(filterEndDate)));
             } else {
                 listCompetitions.clear();
-                listCompetitions.addAll(db.competitionDao().getCompetitionsByMonthAndTrack(license, monthSelected, filterTrack));
+                listCompetitions.addAll(db.competitionDao().getCompetitionsByMonthAndTrack(license, Utils.toDate(filterStartDate), Utils.toDate(filterEndDate), filterTrack));
             }
+        } else {
+            Toast.makeText(v.getContext(), "No se ha realizado ninguna búsqueda: hay que indicar las dos fechas", Toast.LENGTH_LONG).show();
         }
         adapterCompetition.notifyDataSetChanged();
     }
