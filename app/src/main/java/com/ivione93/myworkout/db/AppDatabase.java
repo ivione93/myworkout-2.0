@@ -7,7 +7,7 @@ import androidx.room.TypeConverters;
 @Database(entities = {
         Athlete.class,
         Competition.class,
-        Training.class}, version = 6, exportSchema = false)
+        Training.class}, version = 2, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
     public abstract AthleteDao athleteDao();

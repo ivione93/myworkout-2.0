@@ -2,6 +2,7 @@
 <resources>
 
         <string-array name="months">
+            <item>Mes</item>
             <item>Enero</item>
             <item>Febrero</item>
             <item>Marzo</item>

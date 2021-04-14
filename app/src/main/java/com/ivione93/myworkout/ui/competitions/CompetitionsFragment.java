@@ -1,6 +1,6 @@
 package com.ivione93.myworkout.ui.competitions;
 
-import android.content.Context;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,11 +9,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
+import android.widget.EditText;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
-import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -46,7 +46,7 @@ public class CompetitionsFragment extends Fragment {
 
         setHasOptionsMenu(true);
 
-         db = Room.databaseBuilder(root.getContext(),
+        db = Room.databaseBuilder(root.getContext(),
                 AppDatabase.class, "database-name").fallbackToDestructiveMigration().allowMainThreadQueries().build();
 
         license = getActivity().getIntent().getStringExtra("license");
@@ -87,6 +87,9 @@ public class CompetitionsFragment extends Fragment {
             newCompetition.putExtra("license", license);
             getContext().startActivity(newCompetition);
         }
+        if (item.getItemId() == R.id.menu_filter_competition) {
+            createFilterDialog().show();
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -97,5 +100,47 @@ public class CompetitionsFragment extends Fragment {
 
         rvCompetitions.setLayoutManager(new LinearLayoutManager(root.getContext()));
         rvCompetitions.setAdapter(adapterCompetition);
+    }
+
+    public AlertDialog createFilterDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        View v = inflater.inflate(R.layout.dialog_filter_competitions, null);
+
+        builder.setTitle("Filtros de búsqueda");
+        builder.setView(v)
+            .setPositiveButton("Aceptar", (dialog, which) -> {
+                applyFilters(v);
+            })
+            .setNegativeButton("Cancelar", (dialog, which) -> {
+
+            });
+
+        return builder.create();
+
+    }
+
+    private void applyFilters(View v) {
+        Spinner monthSpinner = v.findViewById(R.id.filterMonthCompetition);
+        EditText filterTrackCompetition = v.findViewById(R.id.filterTrackCompetition);
+
+        int monthSelected = monthSpinner.getSelectedItemPosition();
+        String filterTrack = filterTrackCompetition.getText().toString();
+
+        if (monthSelected == 0) {
+            if (!filterTrack.equals("")) {
+                listCompetitions.clear();
+                listCompetitions.addAll(db.competitionDao().getCompetitionsByTrack(license, filterTrack));
+            }
+        } else {
+            if (filterTrack.equals("")) {
+                listCompetitions.clear();
+                listCompetitions.addAll(db.competitionDao().getCompetitionsByMonth(license, monthSelected));
+            } else {
+                listCompetitions.clear();
+                listCompetitions.addAll(db.competitionDao().getCompetitionsByMonthAndTrack(license, monthSelected, filterTrack));
+            }
+        }
+        adapterCompetition.notifyDataSetChanged();
     }
 }

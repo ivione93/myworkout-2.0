@@ -19,6 +19,15 @@ public interface CompetitionDao {
     @Query("SELECT * FROM competition WHERE license = :license AND id = :id")
     Competition getCompetitionToEdit(String license, Long id);
 
+    @Query("SELECT * FROM competition WHERE license = :license AND strftime('%m',competition_date) = :month")
+    List<Competition> getCompetitionsByMonth(String license, int month);
+
+    @Query("SELECT * FROM competition WHERE license = :license AND track = :track")
+    List<Competition> getCompetitionsByTrack(String license, String track);
+
+    @Query("SELECT * FROM competition WHERE license = :license AND strftime('%m',competition_date) = :month AND track = :track")
+    List<Competition> getCompetitionsByMonthAndTrack(String license, int month, String track);
+
     @Insert
     void insert(Competition competition);
 
