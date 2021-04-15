@@ -29,7 +29,9 @@ import com.ivione93.myworkout.db.AppDatabase;
 import com.ivione93.myworkout.db.Athlete;
 import com.ivione93.myworkout.db.Competition;
 import com.ivione93.myworkout.db.Training;
+import com.ivione93.myworkout.ui.competitions.NewCompetitionActivity;
 import com.ivione93.myworkout.ui.login.LoginActivity;
+import com.ivione93.myworkout.ui.trainings.NewTrainingActivity;
 
 import java.util.List;
 
@@ -115,6 +117,17 @@ public class ProfileFragment extends Fragment {
             editProfile.putExtra("photoUrl", photoUrl.toString());
             getContext().startActivity(editProfile);
             return true;
+        }
+        if (item.getItemId() == R.id.menu_add_training_profile) {
+            Intent newTraining = new Intent(getActivity(), NewTrainingActivity.class);
+            newTraining.putExtra("license", license);
+            getContext().startActivity(newTraining);
+        }
+        if (item.getItemId() == R.id.menu_add_competition_profile) {
+            Intent newCompetition = new Intent(getActivity(), NewCompetitionActivity.class);
+            newCompetition.putExtra("isNew", true);
+            newCompetition.putExtra("license", license);
+            getContext().startActivity(newCompetition);
         }
         if (item.getItemId() == R.id.menu_log_out) {
             signOut();

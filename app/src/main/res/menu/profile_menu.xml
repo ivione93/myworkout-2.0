@@ -11,6 +11,10 @@
         <menu>
             <item android:id="@+id/menu_edit_profile"
                 android:title="Editar" />
+            <item android:id="@+id/menu_add_training_profile"
+                android:title="Añadir entrenamiento" />
+            <item android:id="@+id/menu_add_competition_profile"
+                android:title="Añadir competición" />
         </menu>
     </item>
 
