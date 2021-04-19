@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MyWorkout</string>
+    <string name="app_name">Hoja del mes</string>
     <string name="title_profile">Perfil</string>
     <string name="title_trainings">Entrenamientos</string>
     <string name="title_competitions">Competiciones</string>
