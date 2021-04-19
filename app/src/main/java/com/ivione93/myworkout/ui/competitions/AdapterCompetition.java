@@ -3,8 +3,6 @@ package com.ivione93.myworkout.ui.competitions;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
@@ -53,13 +51,13 @@ public class AdapterCompetition extends RecyclerView.Adapter<AdapterCompetition.
         holder.result.setText(listCompetitions.get(position).result);
         holder.date.setText(Utils.toString(listCompetitions.get(position).date));
 
-        holder.ibOptions.setOnClickListener(v -> {
-            PopupMenu popup = new PopupMenu(holder.itemView.getContext(), holder.ibOptions);
+        holder.ibOptionsCompetition.setOnClickListener(v -> {
+            PopupMenu popup = new PopupMenu(holder.itemView.getContext(), holder.ibOptionsCompetition);
             popup.inflate(R.menu.item_competition_menu);
             popup.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
                     case R.id.menu_edit_competition:
-                        Intent newCompetition = new Intent((Activity) holder.itemView.getContext(), NewCompetitionActivity.class);
+                        Intent newCompetition = new Intent(holder.itemView.getContext(), NewCompetitionActivity.class);
                         newCompetition.putExtra("isNew", false);
                         newCompetition.putExtra("license", listCompetitions.get(position).license);
                         newCompetition.putExtra("id", listCompetitions.get(position).id);
@@ -120,7 +118,7 @@ public class AdapterCompetition extends RecyclerView.Adapter<AdapterCompetition.
 
     public class ViewHolderCompetitions extends RecyclerView.ViewHolder {
         TextView name, place, track, result, date;
-        ImageButton ibOptions;
+        ImageButton ibOptionsCompetition;
 
         public ViewHolderCompetitions(@NonNull View itemView) {
             super(itemView);
@@ -129,7 +127,7 @@ public class AdapterCompetition extends RecyclerView.Adapter<AdapterCompetition.
             track = itemView.findViewById(R.id.surnameText);
             result = itemView.findViewById(R.id.resultText);
             date = itemView.findViewById(R.id.dateText);
-            ibOptions = itemView.findViewById(R.id.ibOptions);
+            ibOptionsCompetition = itemView.findViewById(R.id.ibOptionsCompetition);
         }
     }
 }

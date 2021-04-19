@@ -1,18 +1,25 @@
 package com.ivione93.myworkout.ui.trainings;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import com.ivione93.myworkout.R;
 import com.ivione93.myworkout.Utils;
+import com.ivione93.myworkout.db.AppDatabase;
 import com.ivione93.myworkout.db.Training;
+import com.ivione93.myworkout.ui.competitions.NewCompetitionActivity;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -39,10 +46,37 @@ public class AdapterTraining extends RecyclerView.Adapter<AdapterTraining.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolderTrainings holder, int position) {
+        AppDatabase db = Room.databaseBuilder(holder.itemView.getContext(),
+                AppDatabase.class, "database-name").fallbackToDestructiveMigration().allowMainThreadQueries().build();
+
         holder.itemTrainingDate.setText(Utils.toString(listTrainings.get(position).date));
         holder.itemTrainingTime.setText(listTrainings.get(position).warmup.time + " min");
         holder.itemTrainingDistance.setText(listTrainings.get(position).warmup.distance + " km");
         holder.itemTrainingPartial.setText(listTrainings.get(position).warmup.partial + " /km");
+
+        holder.ibOptionsTraining.setOnClickListener(v -> {
+            PopupMenu popup = new PopupMenu(holder.itemView.getContext(), holder.ibOptionsTraining);
+            popup.inflate(R.menu.item_training_menu);
+            popup.setOnMenuItemClickListener(item -> {
+                switch (item.getItemId()) {
+                    case R.id.menu_edit_training:
+                        Intent newTraining = new Intent(holder.itemView.getContext(), NewTrainingActivity.class);
+                        newTraining.putExtra("isNew", false);
+                        newTraining.putExtra("license", listTrainings.get(position).license);
+                        newTraining.putExtra("id", listTrainings.get(position).idTraining);
+                        holder.itemView.getContext().startActivity(newTraining);
+                        return true;
+                    case R.id.menu_delete_training:
+                        db.trainingDao().deleteTrainingByLicense(listTrainings.get(position).license, listTrainings.get(position).idTraining);
+                        listTrainings.remove(position);
+                        notifyItemRemoved(position);
+                        return true;
+                    default:
+                        return false;
+                }
+            });
+            popup.show();
+        });
     }
 
     @Override
@@ -88,6 +122,7 @@ public class AdapterTraining extends RecyclerView.Adapter<AdapterTraining.ViewHo
 
     public class ViewHolderTrainings extends RecyclerView.ViewHolder {
         TextView itemTrainingDate, itemTrainingTime, itemTrainingDistance, itemTrainingPartial;
+        ImageButton ibOptionsTraining;
 
         public ViewHolderTrainings(@NonNull View itemView) {
             super(itemView);
@@ -95,6 +130,7 @@ public class AdapterTraining extends RecyclerView.Adapter<AdapterTraining.ViewHo
             itemTrainingTime = itemView.findViewById(R.id.itemTrainingTime);
             itemTrainingDistance = itemView.findViewById(R.id.itemTrainingDistance);
             itemTrainingPartial = itemView.findViewById(R.id.itemTrainingPartial);
+            ibOptionsTraining = itemView.findViewById(R.id.ibOptionsTraining);
         }
     }
 }
