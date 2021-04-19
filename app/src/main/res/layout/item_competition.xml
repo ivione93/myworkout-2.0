@@ -41,7 +41,7 @@
             tools:text="Campeonato de Madrid absoluto" />
 
         <ImageButton
-            android:id="@+id/ibOptions"
+            android:id="@+id/ibOptionsCompetition"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
