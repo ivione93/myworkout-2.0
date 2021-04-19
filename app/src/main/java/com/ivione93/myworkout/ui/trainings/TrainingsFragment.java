@@ -3,12 +3,14 @@ package com.ivione93.myworkout.ui.trainings;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -23,7 +25,12 @@ import com.ivione93.myworkout.R;
 import com.ivione93.myworkout.db.AppDatabase;
 import com.ivione93.myworkout.db.Training;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class TrainingsFragment extends Fragment {
@@ -32,6 +39,9 @@ public class TrainingsFragment extends Fragment {
 
     private List<Training> listTrainings = new ArrayList<>();
     private AdapterTraining adapterTraining;
+
+    CalendarView calendarTrainings;
+    RecyclerView rvTrainings;
 
     String license;
     AppDatabase db;
@@ -52,9 +62,25 @@ public class TrainingsFragment extends Fragment {
         listTrainings.clear();
         listTrainings.addAll(db.trainingDao().getTrainingByLicense(license));
 
+        initReferences(root);
         setUpRecyclerView(root);
 
         return root;
+    }
+
+    private void initReferences(View root) {
+        calendarTrainings = root.findViewById(R.id.calendar_trainings);
+        calendarTrainings.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
+            Log.v("#####", "Date Change: " + month + "-" + dayOfMonth + "-" + year);
+            String dateString;
+            month += 1;
+            if (month < 10) {
+                dateString = dayOfMonth + "-0" + month + "-" + year;
+            } else {
+                dateString = dayOfMonth + "-" + month + "-" + year;
+            }
+            adapterTraining.getFilter().filter(dateString);
+        });
     }
 
     @Override
@@ -89,11 +115,14 @@ public class TrainingsFragment extends Fragment {
     }
 
     private void setUpRecyclerView(View root) {
-        RecyclerView rvTrainings = root.findViewById(R.id.rvTrainings);
+        rvTrainings = root.findViewById(R.id.rvTrainings);
         rvTrainings.setHasFixedSize(true);
         adapterTraining = new AdapterTraining(listTrainings);
 
         rvTrainings.setLayoutManager(new LinearLayoutManager(root.getContext()));
+        Date now = Calendar.getInstance().getTime();
+        DateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+        adapterTraining.getFilter().filter(format.format(now));
         rvTrainings.setAdapter(adapterTraining);
     }
 }

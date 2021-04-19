@@ -6,14 +6,26 @@
     android:layout_height="match_parent"
     tools:context=".ui.trainings.TrainingsFragment">
 
+    <CalendarView
+        android:id="@+id/calendar_trainings"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:firstDayOfWeek="0"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvTrainings"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="16dp"
         android:layout_marginBottom="64dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="@+id/calendar_trainings"
+        app:layout_constraintTop_toBottomOf="@+id/calendar_trainings"
+        android:visibility="visible"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
