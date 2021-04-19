@@ -1,4 +1,4 @@
-package com.ivione93.myworkout;
+package com.ivione93.myworkout.ui.profile;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +16,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.textfield.TextInputLayout;
+import com.ivione93.myworkout.MainActivity;
+import com.ivione93.myworkout.R;
 import com.ivione93.myworkout.db.AppDatabase;
 import com.ivione93.myworkout.db.Athlete;
 
