@@ -2,7 +2,6 @@ package com.ivione93.myworkout.ui.trainings;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import com.ivione93.myworkout.R;
+import com.ivione93.myworkout.Utils;
 import com.ivione93.myworkout.db.AppDatabase;
 import com.ivione93.myworkout.db.Training;
 
@@ -40,6 +40,7 @@ public class TrainingsFragment extends Fragment {
     RecyclerView rvTrainings;
 
     String license;
+    String dateSelected = Utils.toString(new Date());
     AppDatabase db;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -64,21 +65,6 @@ public class TrainingsFragment extends Fragment {
         return root;
     }
 
-    private void initReferences(View root) {
-        calendarTrainings = root.findViewById(R.id.calendar_trainings);
-        calendarTrainings.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
-            Log.v("#####", "Date Change: " + month + "-" + dayOfMonth + "-" + year);
-            String dateString;
-            month += 1;
-            if (month < 10) {
-                dateString = dayOfMonth + "-0" + month + "-" + year;
-            } else {
-                dateString = dayOfMonth + "-" + month + "-" + year;
-            }
-            adapterTraining.getFilter().filter(dateString);
-        });
-    }
-
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.list_training_menu, menu);
@@ -90,9 +76,23 @@ public class TrainingsFragment extends Fragment {
         if (item.getItemId() == R.id.menu_add_training) {
             Intent newTraining = new Intent(getActivity(), NewTrainingActivity.class);
             newTraining.putExtra("license", license);
+            newTraining.putExtra("dateSelected", dateSelected);
             getContext().startActivity(newTraining);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void initReferences(View root) {
+        calendarTrainings = root.findViewById(R.id.calendar_trainings);
+        calendarTrainings.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
+            month += 1;
+            if (month < 10) {
+                dateSelected = dayOfMonth + "/0" + month + "/" + year;
+            } else {
+                dateSelected = dayOfMonth + "/" + month + "/" + year;
+            }
+            adapterTraining.getFilter().filter(dateSelected);
+        });
     }
 
     private void setUpRecyclerView(View root) {
@@ -102,7 +102,7 @@ public class TrainingsFragment extends Fragment {
 
         rvTrainings.setLayoutManager(new LinearLayoutManager(root.getContext()));
         Date now = Calendar.getInstance().getTime();
-        DateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+        DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         adapterTraining.getFilter().filter(format.format(now));
         rvTrainings.setAdapter(adapterTraining);
     }

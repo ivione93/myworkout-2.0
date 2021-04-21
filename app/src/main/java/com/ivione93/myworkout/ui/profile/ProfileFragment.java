@@ -13,8 +13,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.room.Room;
 
@@ -99,7 +97,7 @@ public class ProfileFragment extends Fragment {
             nameProfile.setText(athlete.name + " " + athlete.surname);
             emailProfile.setText(account.getEmail());
             licenseProfile.setText(athlete.license);
-            birthProfile.setText(athlete.birthdate);
+            birthProfile.setText(Utils.toString(athlete.birthday));
         }
     }
 

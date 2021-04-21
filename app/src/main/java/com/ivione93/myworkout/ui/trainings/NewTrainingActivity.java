@@ -1,22 +1,21 @@
 package com.ivione93.myworkout.ui.trainings;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.Room;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.ivione93.myworkout.MainActivity;
 import com.ivione93.myworkout.R;
 import com.ivione93.myworkout.Utils;
 import com.ivione93.myworkout.db.AppDatabase;
-import com.ivione93.myworkout.db.Competition;
 import com.ivione93.myworkout.db.Training;
 import com.ivione93.myworkout.db.Warmup;
 
@@ -27,6 +26,7 @@ public class NewTrainingActivity extends AppCompatActivity {
 
     AppDatabase db;
     String license;
+    String dateSelected;
     Long id;
     Boolean isNew;
 
@@ -38,6 +38,7 @@ public class NewTrainingActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         license = getIntent().getStringExtra("license");
+        dateSelected = getIntent().getStringExtra("dateSelected");
         isNew = getIntent().getBooleanExtra("isNew", true);
 
         initReferences(isNew);
@@ -73,6 +74,8 @@ public class NewTrainingActivity extends AppCompatActivity {
 
         if (!isNew) {
             loadTraining();
+        } else {
+            trainingDateText.setText(dateSelected);
         }
     }
 
@@ -92,17 +95,41 @@ public class NewTrainingActivity extends AppCompatActivity {
         String time = trainingTimeText.getEditText().getText().toString();
         String distance = trainingDistanceText.getEditText().getText().toString();
 
-        Warmup warmup = new Warmup(time, distance, Utils.calculatePartial(time, distance));
-        Training training = new Training(license, Utils.toDate(date), warmup);
+        if (validateNewTraining(date, time, distance)) {
+            if (Utils.validateDateFormat(date)) {
+                Warmup warmup = new Warmup(time, distance, Utils.calculatePartial(time, distance));
+                Training training = new Training(license, Utils.toDate(date), warmup);
 
-        if (isNew) {
-            db.trainingDao().insert(training);
+                if (isNew) {
+                    db.trainingDao().insert(training);
+                } else {
+                    db.trainingDao().update(warmup.distance, warmup.time, warmup.partial, license, id);
+                }
+
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.putExtra("license", license);
+                startActivity(intent);
+            } else {
+                Toast toast = Toast.makeText(getApplicationContext(), "Formato de fecha incorrecto", Toast.LENGTH_LONG);
+                toast.show();
+            }
         } else {
-            db.trainingDao().update(warmup.distance, warmup.time, warmup.partial, license, id);
+            Toast toast = Toast.makeText(getApplicationContext(), "Faltan campos por completar", Toast.LENGTH_LONG);
+            toast.show();
         }
+    }
 
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("license", license);
-        startActivity(intent);
+    private boolean validateNewTraining(String date, String time, String distance) {
+        boolean isValid = true;
+        if (date.isEmpty() || date == null) {
+            isValid = false;
+        }
+        if (time.isEmpty() || time == null) {
+            isValid = false;
+        }
+        if (distance.isEmpty() || distance == null) {
+            isValid = false;
+        }
+        return isValid;
     }
 }

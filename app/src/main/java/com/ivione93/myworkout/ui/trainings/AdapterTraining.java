@@ -1,6 +1,5 @@
 package com.ivione93.myworkout.ui.trainings;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,9 +18,8 @@ import com.ivione93.myworkout.R;
 import com.ivione93.myworkout.Utils;
 import com.ivione93.myworkout.db.AppDatabase;
 import com.ivione93.myworkout.db.Training;
-import com.ivione93.myworkout.ui.competitions.NewCompetitionActivity;
+import com.ivione93.myworkout.db.Warmup;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -98,7 +96,7 @@ public class AdapterTraining extends RecyclerView.Adapter<AdapterTraining.ViewHo
             } else {
                 String filterPattern = constraint.toString();
                 for (Training training : listTrainingsFull) {
-                    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
                     String actualTrainingDate = sdf.format(training.date);
                     if (actualTrainingDate.equals(filterPattern)) {
                         filteredTrainings.add(training);

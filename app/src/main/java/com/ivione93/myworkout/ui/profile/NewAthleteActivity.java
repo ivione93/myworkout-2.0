@@ -18,6 +18,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.textfield.TextInputLayout;
 import com.ivione93.myworkout.MainActivity;
 import com.ivione93.myworkout.R;
+import com.ivione93.myworkout.Utils;
 import com.ivione93.myworkout.db.AppDatabase;
 import com.ivione93.myworkout.db.Athlete;
 
@@ -37,8 +38,12 @@ public class NewAthleteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_athlete);
 
-        getSupportActionBar().setTitle("Nuevo atleta");
+        getSupportActionBar().setTitle("Alta atleta");
 
+        initReferences();
+    }
+
+    private void initReferences() {
         licenseText = findViewById(R.id.licenseText);
         nameText = findViewById(R.id.nameText);
         surnameText = findViewById(R.id.surnameText);
@@ -52,25 +57,29 @@ public class NewAthleteActivity extends AppCompatActivity {
         String license = licenseText.getEditText().getText().toString();
         String name = nameText.getEditText().getText().toString();
         String surname = surnameText.getEditText().getText().toString();
-        String birthdate = birthdateText.getText().toString();
+        String birthday = birthdateText.getText().toString();
 
-        if (validateNewAthlete(license, name, surname, birthdate)) {
-            if (db.athleteDao().getAthleteByLicense(licenseText.getEditText().getText().toString()) != null) {
-                Toast toast = Toast.makeText(getApplicationContext(), "Ya existe un atleta con esa licencia", Toast.LENGTH_LONG);
-                toast.show();
+        if (validateNewAthlete(license, name, surname, birthday)) {
+            if (Utils.validateDateFormat(birthday)) {
+                if (db.athleteDao().getAthleteByLicense(licenseText.getEditText().getText().toString()) != null) {
+                    Toast toast = Toast.makeText(getApplicationContext(), "Ya existe un atleta con esa licencia", Toast.LENGTH_LONG);
+                    toast.show();
+                } else {
+                    Athlete athlete = new Athlete(licenseText.getEditText().getText().toString(),
+                            nameText.getEditText().getText().toString(),
+                            surnameText.getEditText().getText().toString(),
+                            Utils.toDate(birthdateText.getText().toString()),
+                            email,
+                            googleId);
+                    db.athleteDao().insert(athlete);
+
+                    Intent intent = new Intent(this, MainActivity.class);
+                    intent.putExtra("license", licenseText.getEditText().getText().toString());
+                    startActivity(intent);
+                }
             } else {
-
-                Athlete athlete = new Athlete(licenseText.getEditText().getText().toString(),
-                        nameText.getEditText().getText().toString(),
-                        surnameText.getEditText().getText().toString(),
-                        birthdateText.getText().toString(),
-                        email,
-                        googleId);
-                db.athleteDao().insert(athlete);
-
-                Intent intent = new Intent(this, MainActivity.class);
-                intent.putExtra("license", licenseText.getEditText().getText().toString());
-                startActivity(intent);
+                Toast toast = Toast.makeText(getApplicationContext(), "Formato de fecha incorrecto", Toast.LENGTH_LONG);
+                toast.show();
             }
         } else {
             Toast toast = Toast.makeText(getApplicationContext(), "Faltan campos por completar", Toast.LENGTH_LONG);
@@ -107,7 +116,6 @@ public class NewAthleteActivity extends AppCompatActivity {
                 googleId = account.getId();
             }
         }
-
     }
 
     @Override
@@ -131,16 +139,16 @@ public class NewAthleteActivity extends AppCompatActivity {
 
     private boolean validateNewAthlete(String license, String name, String surname, String birthdate) {
         boolean isValid = true;
-        if(license.isEmpty() || license == null) {
+        if (license.isEmpty() || license == null) {
             isValid = false;
         }
-        if(name.isEmpty() || name == null) {
+        if (name.isEmpty() || name == null) {
             isValid = false;
         }
-        if(surname.isEmpty() || surname == null) {
+        if (surname.isEmpty() || surname == null) {
             isValid = false;
         }
-        if(birthdate.isEmpty() || birthdate == null) {
+        if (birthdate.isEmpty() || birthdate == null) {
             isValid = false;
         }
         return isValid;

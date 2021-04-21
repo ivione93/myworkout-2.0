@@ -95,22 +95,27 @@ public class NewCompetitionActivity extends AppCompatActivity {
         String date = dateText.getText().toString();
 
         if (validateNewCompetition(place, competitionName, track, result, date)) {
-            Competition competition = new Competition(license,
-                    placeText.getEditText().getText().toString(),
-                    competitionNameText.getEditText().getText().toString(),
-                    Utils.toDate(dateText.getText().toString()),
-                    trackText.getEditText().getText().toString(),
-                    resultText.getEditText().getText().toString());
-            if (isNew) {
-                db.competitionDao().insert(competition);
-            } else {
-                db.competitionDao().update(competition.place, competition.name, competition.track, competition.result, competition.date,
-                        competition.license, id);
-            }
+            if (Utils.validateDateFormat(date)) {
+                Competition competition = new Competition(license,
+                        placeText.getEditText().getText().toString(),
+                        competitionNameText.getEditText().getText().toString(),
+                        Utils.toDate(dateText.getText().toString()),
+                        trackText.getEditText().getText().toString(),
+                        resultText.getEditText().getText().toString());
+                if (isNew) {
+                    db.competitionDao().insert(competition);
+                } else {
+                    db.competitionDao().update(competition.place, competition.name, competition.track, competition.result, competition.date,
+                            competition.license, id);
+                }
 
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra("license", license);
-            startActivity(intent);
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.putExtra("license", license);
+                startActivity(intent);
+            } else {
+                Toast toast = Toast.makeText(getApplicationContext(), "Formato de fecha incorrecto", Toast.LENGTH_LONG);
+                toast.show();
+            }
         } else {
             Toast toast = Toast.makeText(getApplicationContext(), "Faltan campos por completar", Toast.LENGTH_LONG);
             toast.show();
