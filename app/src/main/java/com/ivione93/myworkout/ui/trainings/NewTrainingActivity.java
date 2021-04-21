@@ -25,6 +25,7 @@ public class NewTrainingActivity extends AppCompatActivity {
 
     AppDatabase db;
     String license;
+    String dateSelected;
     Long id;
     Boolean isNew;
 
@@ -36,6 +37,7 @@ public class NewTrainingActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         license = getIntent().getStringExtra("license");
+        dateSelected = getIntent().getStringExtra("dateSelected");
         isNew = getIntent().getBooleanExtra("isNew", true);
 
         initReferences(isNew);
@@ -71,6 +73,8 @@ public class NewTrainingActivity extends AppCompatActivity {
 
         if (!isNew) {
             loadTraining();
+        } else {
+            trainingDateText.setText(dateSelected);
         }
     }
 
