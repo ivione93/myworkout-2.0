@@ -46,9 +46,9 @@ public class Utils {
     }
 
     public static boolean validateDateFormat(String sDate) {
+        SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy");
+        formatDate.setLenient(false);
         try {
-            SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy");
-            formatDate.setLenient(false);
             formatDate.parse(sDate);
         } catch (ParseException e) {
             return false;

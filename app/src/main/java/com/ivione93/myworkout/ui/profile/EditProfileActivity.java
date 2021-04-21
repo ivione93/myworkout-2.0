@@ -102,7 +102,12 @@ public class EditProfileActivity extends AppCompatActivity {
         editBirth = birthEditProfile.getText().toString();
 
         if (validateEditProfile(editName, editSurname, editBirth)) {
-            db.athleteDao().update(editName, editSurname, Utils.toDate(editBirth), license);
+            if (Utils.validateDateFormat(editBirth)) {
+                db.athleteDao().update(editName, editSurname, Utils.toDate(editBirth), license);
+            } else {
+                Toast toast = Toast.makeText(getApplicationContext(), "Formato de fecha incorrecto", Toast.LENGTH_LONG);
+                toast.show();
+            }
         } else {
             Toast toast = Toast.makeText(getApplicationContext(), "Faltan campos por completar", Toast.LENGTH_LONG);
             toast.show();

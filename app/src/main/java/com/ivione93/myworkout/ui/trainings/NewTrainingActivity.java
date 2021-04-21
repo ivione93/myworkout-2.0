@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -94,17 +95,22 @@ public class NewTrainingActivity extends AppCompatActivity {
         String time = trainingTimeText.getEditText().getText().toString();
         String distance = trainingDistanceText.getEditText().getText().toString();
 
-        Warmup warmup = new Warmup(time, distance, Utils.calculatePartial(time, distance));
-        Training training = new Training(license, Utils.toDate(date), warmup);
+        if (Utils.validateDateFormat(date)) {
+            Warmup warmup = new Warmup(time, distance, Utils.calculatePartial(time, distance));
+            Training training = new Training(license, Utils.toDate(date), warmup);
 
-        if (isNew) {
-            db.trainingDao().insert(training);
+            if (isNew) {
+                db.trainingDao().insert(training);
+            } else {
+                db.trainingDao().update(warmup.distance, warmup.time, warmup.partial, license, id);
+            }
+
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("license", license);
+            startActivity(intent);
         } else {
-            db.trainingDao().update(warmup.distance, warmup.time, warmup.partial, license, id);
+            Toast toast = Toast.makeText(getApplicationContext(), "Formato de fecha incorrecto", Toast.LENGTH_LONG);
+            toast.show();
         }
-
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("license", license);
-        startActivity(intent);
     }
 }
