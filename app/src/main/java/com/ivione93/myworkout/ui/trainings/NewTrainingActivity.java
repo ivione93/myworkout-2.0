@@ -95,22 +95,41 @@ public class NewTrainingActivity extends AppCompatActivity {
         String time = trainingTimeText.getEditText().getText().toString();
         String distance = trainingDistanceText.getEditText().getText().toString();
 
-        if (Utils.validateDateFormat(date)) {
-            Warmup warmup = new Warmup(time, distance, Utils.calculatePartial(time, distance));
-            Training training = new Training(license, Utils.toDate(date), warmup);
+        if (validateNewTraining(date, time, distance)) {
+            if (Utils.validateDateFormat(date)) {
+                Warmup warmup = new Warmup(time, distance, Utils.calculatePartial(time, distance));
+                Training training = new Training(license, Utils.toDate(date), warmup);
 
-            if (isNew) {
-                db.trainingDao().insert(training);
+                if (isNew) {
+                    db.trainingDao().insert(training);
+                } else {
+                    db.trainingDao().update(warmup.distance, warmup.time, warmup.partial, license, id);
+                }
+
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.putExtra("license", license);
+                startActivity(intent);
             } else {
-                db.trainingDao().update(warmup.distance, warmup.time, warmup.partial, license, id);
+                Toast toast = Toast.makeText(getApplicationContext(), "Formato de fecha incorrecto", Toast.LENGTH_LONG);
+                toast.show();
             }
-
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra("license", license);
-            startActivity(intent);
         } else {
-            Toast toast = Toast.makeText(getApplicationContext(), "Formato de fecha incorrecto", Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(getApplicationContext(), "Faltan campos por completar", Toast.LENGTH_LONG);
             toast.show();
         }
+    }
+
+    private boolean validateNewTraining(String date, String time, String distance) {
+        boolean isValid = true;
+        if (date.isEmpty() || date == null) {
+            isValid = false;
+        }
+        if (time.isEmpty() || time == null) {
+            isValid = false;
+        }
+        if (distance.isEmpty() || distance == null) {
+            isValid = false;
+        }
+        return isValid;
     }
 }
