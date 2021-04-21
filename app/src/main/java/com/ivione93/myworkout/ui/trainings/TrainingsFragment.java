@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import com.ivione93.myworkout.R;
+import com.ivione93.myworkout.Utils;
 import com.ivione93.myworkout.db.AppDatabase;
 import com.ivione93.myworkout.db.Training;
 
@@ -39,7 +40,7 @@ public class TrainingsFragment extends Fragment {
     RecyclerView rvTrainings;
 
     String license;
-    String dateSelected;
+    String dateSelected = Utils.toString(new Date());
     AppDatabase db;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
