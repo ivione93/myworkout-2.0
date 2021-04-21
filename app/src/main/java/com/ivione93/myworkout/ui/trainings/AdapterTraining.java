@@ -1,6 +1,5 @@
 package com.ivione93.myworkout.ui.trainings;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,12 +18,9 @@ import com.ivione93.myworkout.R;
 import com.ivione93.myworkout.Utils;
 import com.ivione93.myworkout.db.AppDatabase;
 import com.ivione93.myworkout.db.Training;
-import com.ivione93.myworkout.ui.competitions.NewCompetitionActivity;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class AdapterTraining extends RecyclerView.Adapter<AdapterTraining.ViewHolderTrainings> implements Filterable {

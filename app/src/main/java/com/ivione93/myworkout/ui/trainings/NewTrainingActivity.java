@@ -1,22 +1,20 @@
 package com.ivione93.myworkout.ui.trainings;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.Room;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.EditText;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.ivione93.myworkout.MainActivity;
 import com.ivione93.myworkout.R;
 import com.ivione93.myworkout.Utils;
 import com.ivione93.myworkout.db.AppDatabase;
-import com.ivione93.myworkout.db.Competition;
 import com.ivione93.myworkout.db.Training;
 import com.ivione93.myworkout.db.Warmup;
 
