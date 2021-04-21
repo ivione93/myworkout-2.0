@@ -97,7 +97,7 @@ public class ProfileFragment extends Fragment {
             nameProfile.setText(athlete.name + " " + athlete.surname);
             emailProfile.setText(account.getEmail());
             licenseProfile.setText(athlete.license);
-            birthProfile.setText(athlete.birthdate);
+            birthProfile.setText(Utils.toString(athlete.birthday));
         }
     }
 

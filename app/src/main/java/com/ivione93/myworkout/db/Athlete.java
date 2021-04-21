@@ -5,6 +5,8 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.util.Date;
+
 @Entity
 public class Athlete {
     @PrimaryKey
@@ -15,19 +17,19 @@ public class Athlete {
     public String name;
     @ColumnInfo(name = "surname")
     public String surname;
-    @ColumnInfo(name = "birthdate")
-    public String birthdate;
+    @ColumnInfo(name = "birthday")
+    public Date birthday;
     @ColumnInfo(name = "email")
     public String email;
     @NonNull
     @ColumnInfo(name = "googleId")
     public String googleId;
 
-    public Athlete(String license, String name, String surname, String birthdate, String email, String googleId) {
+    public Athlete(String license, String name, String surname, Date birthday, String email, String googleId) {
         this.license = license;
         this.name = name;
         this.surname = surname;
-        this.birthdate = birthdate;
+        this.birthday = birthday;
         this.email = email;
         this.googleId = googleId;
     }

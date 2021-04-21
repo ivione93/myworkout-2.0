@@ -43,6 +43,17 @@ public class Utils {
         sRitmo = iRitmo + "." + sec;
 
         return sRitmo;
-
     }
+
+    public static boolean validateDateFormat(String sDate) {
+        try {
+            SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy");
+            formatDate.setLenient(false);
+            formatDate.parse(sDate);
+        } catch (ParseException e) {
+            return false;
+        }
+        return true;
+    }
+
 }

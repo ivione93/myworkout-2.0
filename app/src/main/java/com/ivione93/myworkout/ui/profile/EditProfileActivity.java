@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.textfield.TextInputLayout;
 import com.ivione93.myworkout.MainActivity;
 import com.ivione93.myworkout.R;
+import com.ivione93.myworkout.Utils;
 import com.ivione93.myworkout.db.AppDatabase;
 import com.ivione93.myworkout.db.Athlete;
 
@@ -91,7 +92,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
         nameEditProfile.getEditText().setText(athlete.name);
         surnameEditProfile.getEditText().setText(athlete.surname);
-        birthEditProfile.setText(athlete.birthdate);
+        birthEditProfile.setText(Utils.toString(athlete.birthday));
     }
 
     private void saveEditProfile() {
@@ -101,7 +102,7 @@ public class EditProfileActivity extends AppCompatActivity {
         editBirth = birthEditProfile.getText().toString();
 
         if (validateEditProfile(editName, editSurname, editBirth)) {
-            db.athleteDao().update(editName, editSurname, editBirth, license);
+            db.athleteDao().update(editName, editSurname, Utils.toDate(editBirth), license);
         } else {
             Toast toast = Toast.makeText(getApplicationContext(), "Faltan campos por completar", Toast.LENGTH_LONG);
             toast.show();
