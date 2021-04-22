@@ -18,63 +18,85 @@ import com.ivione93.myworkout.R;
 import com.ivione93.myworkout.Utils;
 import com.ivione93.myworkout.db.AppDatabase;
 import com.ivione93.myworkout.db.Training;
-import com.ivione93.myworkout.db.Warmup;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-public class AdapterTraining extends RecyclerView.Adapter<AdapterTraining.ViewHolderTrainings> implements Filterable {
+public class AdapterTraining extends RecyclerView.Adapter implements Filterable {
 
     List<Training> listTrainings;
     List<Training> listTrainingsFull;
+
+    AppDatabase db;
 
     public AdapterTraining(List<Training> listTrainings) {
         this.listTrainings = listTrainings;
         this.listTrainingsFull = new ArrayList<>(listTrainings);
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        if (listTrainings.get(position).warmup.time.equals("25")) {
+            return 0;
+        }
+        return 1;
+    }
+
     @NonNull
     @Override
-    public ViewHolderTrainings onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_training, parent, false);
-        return new ViewHolderTrainings(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+        View view;
+
+        if (viewType == 0) {
+            view = layoutInflater.inflate(R.layout.item_training, parent, false);
+            return new ViewHolderOne(view);
+        }
+        view =  layoutInflater.inflate(R.layout.item_series, parent, false);
+        return new ViewHolderTwo(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolderTrainings holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         AppDatabase db = Room.databaseBuilder(holder.itemView.getContext(),
                 AppDatabase.class, "database-name").fallbackToDestructiveMigration().allowMainThreadQueries().build();
 
-        holder.itemTrainingDate.setText(Utils.toString(listTrainings.get(position).date));
-        holder.itemTrainingTime.setText(listTrainings.get(position).warmup.time + " min");
-        holder.itemTrainingDistance.setText(listTrainings.get(position).warmup.distance + " km");
-        holder.itemTrainingPartial.setText(listTrainings.get(position).warmup.partial + " /km");
+        if (listTrainings.get(position).warmup.time.equals("25")) {
+            ViewHolderOne viewHolderOne = (ViewHolderOne) holder;
+            viewHolderOne.itemTrainingDate.setText(Utils.toString(listTrainings.get(position).date));
+            viewHolderOne.itemTrainingTime.setText(listTrainings.get(position).warmup.time + " min");
+            viewHolderOne.itemTrainingDistance.setText(listTrainings.get(position).warmup.distance + " km");
+            viewHolderOne.itemTrainingPartial.setText(listTrainings.get(position).warmup.partial + " /km");
 
-        holder.ibOptionsTraining.setOnClickListener(v -> {
-            PopupMenu popup = new PopupMenu(holder.itemView.getContext(), holder.ibOptionsTraining);
-            popup.inflate(R.menu.item_training_menu);
-            popup.setOnMenuItemClickListener(item -> {
-                switch (item.getItemId()) {
-                    case R.id.menu_edit_training:
-                        Intent newTraining = new Intent(holder.itemView.getContext(), NewTrainingActivity.class);
-                        newTraining.putExtra("isNew", false);
-                        newTraining.putExtra("license", listTrainings.get(position).license);
-                        newTraining.putExtra("id", listTrainings.get(position).idTraining);
-                        holder.itemView.getContext().startActivity(newTraining);
-                        return true;
-                    case R.id.menu_delete_training:
-                        db.trainingDao().deleteTrainingByLicense(listTrainings.get(position).license, listTrainings.get(position).idTraining);
-                        listTrainings.remove(position);
-                        notifyItemRemoved(position);
-                        return true;
-                    default:
-                        return false;
-                }
+            viewHolderOne.ibOptionsTraining.setOnClickListener(v -> {
+                PopupMenu popup = new PopupMenu(holder.itemView.getContext(), viewHolderOne.ibOptionsTraining);
+                popup.inflate(R.menu.item_training_menu);
+                popup.setOnMenuItemClickListener(item -> {
+                    switch (item.getItemId()) {
+                        case R.id.menu_edit_training:
+                            Intent newTraining = new Intent(holder.itemView.getContext(), NewTrainingActivity.class);
+                            newTraining.putExtra("isNew", false);
+                            newTraining.putExtra("license", listTrainings.get(position).license);
+                            newTraining.putExtra("id", listTrainings.get(position).idTraining);
+                            holder.itemView.getContext().startActivity(newTraining);
+                            return true;
+                        case R.id.menu_delete_training:
+                            db.trainingDao().deleteTrainingByLicense(listTrainings.get(position).license, listTrainings.get(position).idTraining);
+                            listTrainings.remove(position);
+                            notifyItemRemoved(position);
+                            return true;
+                        default:
+                            return false;
+                    }
+                });
+                popup.show();
             });
-            popup.show();
-        });
+        } else {
+            ViewHolderTwo viewHolderTwo = (ViewHolderTwo) holder;
+            viewHolderTwo.itemTrainingTime.setText(listTrainings.get(position).warmup.time + " seg");
+            viewHolderTwo.itemTrainingDistance.setText(listTrainings.get(position).warmup.distance + " m");
+        }
     }
 
     @Override
@@ -115,14 +137,14 @@ public class AdapterTraining extends RecyclerView.Adapter<AdapterTraining.ViewHo
             listTrainings.addAll((List) results.values);
             notifyDataSetChanged();
         }
-
     };
 
-    public class ViewHolderTrainings extends RecyclerView.ViewHolder {
+    class ViewHolderOne extends RecyclerView.ViewHolder {
+
         TextView itemTrainingDate, itemTrainingTime, itemTrainingDistance, itemTrainingPartial;
         ImageButton ibOptionsTraining;
 
-        public ViewHolderTrainings(@NonNull View itemView) {
+        public ViewHolderOne(@NonNull View itemView) {
             super(itemView);
             itemTrainingDate = itemView.findViewById(R.id.itemTrainingDate);
             itemTrainingTime = itemView.findViewById(R.id.itemTrainingTime);
@@ -131,4 +153,16 @@ public class AdapterTraining extends RecyclerView.Adapter<AdapterTraining.ViewHo
             ibOptionsTraining = itemView.findViewById(R.id.ibOptionsTraining);
         }
     }
+
+    class ViewHolderTwo extends RecyclerView.ViewHolder {
+
+        TextView itemTrainingTime, itemTrainingDistance;
+
+        public ViewHolderTwo(@NonNull View itemView) {
+            super(itemView);
+            itemTrainingTime = itemView.findViewById(R.id.itemTrainingTime);
+            itemTrainingDistance = itemView.findViewById(R.id.itemTrainingDistance);
+        }
+    }
+
 }
