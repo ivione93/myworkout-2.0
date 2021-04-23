@@ -15,6 +15,10 @@ public class Series {
     @ColumnInfo(name = "id_series")
     public Long idSeries;
 
+    @NonNull
+    @ColumnInfo(name = "id_training")
+    public Long idTraining;
+
     @ColumnInfo(name = "license")
     public String license;
 
@@ -27,9 +31,8 @@ public class Series {
     @ColumnInfo(name = "training_date")
     public Date date;
 
-    public Series() {}
-
-    public Series(String license, String distance, String time, Date date) {
+    public Series(@NonNull Long idTraining, String license, String distance, String time, Date date) {
+        this.idTraining = idTraining;
         this.license = license;
         this.distance = distance;
         this.time = time;

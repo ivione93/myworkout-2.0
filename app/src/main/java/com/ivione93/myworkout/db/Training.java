@@ -25,9 +25,13 @@ public class Training {
     @Embedded
     public Warmup warmup;
 
-    public Training(String license, Date date, Warmup warmup) {
+    @ColumnInfo(name = "hasSeries")
+    public Integer hasSeries;
+
+    public Training(String license, Date date, Warmup warmup, Integer hasSeries) {
         this.license = license;
         this.date = date;
         this.warmup = warmup;
+        this.hasSeries = hasSeries;
     }
 }

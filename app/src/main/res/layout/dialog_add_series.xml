@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.trainings.AddSeriesActivity">
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/tvDistance"
@@ -27,6 +26,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:inputType="numberDecimal"
+        android:hint="(m)"
         app:layout_constraintBottom_toBottomOf="@+id/tvDistance"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/tvDistance"
@@ -48,7 +48,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:inputType="numberDecimal"
+        android:hint="(hh:mm.ss)"
         app:layout_constraintBottom_toBottomOf="@+id/tvTime"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/distance_series"

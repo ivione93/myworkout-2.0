@@ -23,7 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdapterTraining extends RecyclerView.Adapter implements Filterable {
+public class AdapterTraining extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Filterable {
 
     List<Training> listTrainings;
     List<Training> listTrainingsFull;
@@ -37,7 +37,8 @@ public class AdapterTraining extends RecyclerView.Adapter implements Filterable 
 
     @Override
     public int getItemViewType(int position) {
-        if (listTrainings.get(position).warmup.time.equals("25")) {
+
+        if (listTrainings.get(position).hasSeries == 0) {
             return 0;
         }
         return 1;
@@ -53,16 +54,16 @@ public class AdapterTraining extends RecyclerView.Adapter implements Filterable 
             view = layoutInflater.inflate(R.layout.item_training, parent, false);
             return new ViewHolderOne(view);
         }
-        view =  layoutInflater.inflate(R.layout.item_series, parent, false);
+        view = layoutInflater.inflate(R.layout.item_training_series, parent, false);
         return new ViewHolderTwo(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        AppDatabase db = Room.databaseBuilder(holder.itemView.getContext(),
+        db = Room.databaseBuilder(holder.itemView.getContext(),
                 AppDatabase.class, "database-name").fallbackToDestructiveMigration().allowMainThreadQueries().build();
 
-        if (listTrainings.get(position).warmup.time.equals("25")) {
+        if (listTrainings.get(position).hasSeries == 0) {
             ViewHolderOne viewHolderOne = (ViewHolderOne) holder;
             viewHolderOne.itemTrainingDate.setText(Utils.toString(listTrainings.get(position).date));
             viewHolderOne.itemTrainingTime.setText(listTrainings.get(position).warmup.time + " min");
@@ -83,6 +84,7 @@ public class AdapterTraining extends RecyclerView.Adapter implements Filterable 
                             return true;
                         case R.id.menu_delete_training:
                             db.trainingDao().deleteTrainingByLicense(listTrainings.get(position).license, listTrainings.get(position).idTraining);
+                            db.seriesDao().deleteSeries(listTrainings.get(position).license, listTrainings.get(position).idTraining);
                             listTrainings.remove(position);
                             notifyItemRemoved(position);
                             return true;
@@ -94,8 +96,35 @@ public class AdapterTraining extends RecyclerView.Adapter implements Filterable 
             });
         } else {
             ViewHolderTwo viewHolderTwo = (ViewHolderTwo) holder;
-            viewHolderTwo.itemTrainingTime.setText(listTrainings.get(position).warmup.time + " seg");
-            viewHolderTwo.itemTrainingDistance.setText(listTrainings.get(position).warmup.distance + " m");
+            viewHolderTwo.itemTrainingDate.setText(Utils.toString(listTrainings.get(position).date));
+            viewHolderTwo.itemTrainingTime.setText(listTrainings.get(position).warmup.time + " min");
+            viewHolderTwo.itemTrainingDistance.setText(listTrainings.get(position).warmup.distance + " km");
+            viewHolderTwo.itemTrainingPartial.setText(listTrainings.get(position).warmup.partial + " /km");
+
+            viewHolderTwo.ibOptionsTraining.setOnClickListener(v -> {
+                PopupMenu popup = new PopupMenu(holder.itemView.getContext(), viewHolderTwo.ibOptionsTraining);
+                popup.inflate(R.menu.item_training_menu);
+                popup.setOnMenuItemClickListener(item -> {
+                    switch (item.getItemId()) {
+                        case R.id.menu_edit_training:
+                            Intent newTraining = new Intent(holder.itemView.getContext(), NewTrainingActivity.class);
+                            newTraining.putExtra("isNew", false);
+                            newTraining.putExtra("license", listTrainings.get(position).license);
+                            newTraining.putExtra("id", listTrainings.get(position).idTraining);
+                            holder.itemView.getContext().startActivity(newTraining);
+                            return true;
+                        case R.id.menu_delete_training:
+                            db.trainingDao().deleteTrainingByLicense(listTrainings.get(position).license, listTrainings.get(position).idTraining);
+                            db.seriesDao().deleteSeries(listTrainings.get(position).license, listTrainings.get(position).idTraining);
+                            listTrainings.remove(position);
+                            notifyItemRemoved(position);
+                            return true;
+                        default:
+                            return false;
+                    }
+                });
+                popup.show();
+            });
         }
     }
 
@@ -156,12 +185,16 @@ public class AdapterTraining extends RecyclerView.Adapter implements Filterable 
 
     class ViewHolderTwo extends RecyclerView.ViewHolder {
 
-        TextView itemTrainingTime, itemTrainingDistance;
+        TextView itemTrainingDate, itemTrainingTime, itemTrainingDistance, itemTrainingPartial;
+        ImageButton ibOptionsTraining;
 
         public ViewHolderTwo(@NonNull View itemView) {
             super(itemView);
+            itemTrainingDate = itemView.findViewById(R.id.itemTrainingDate);
             itemTrainingTime = itemView.findViewById(R.id.itemTrainingTime);
             itemTrainingDistance = itemView.findViewById(R.id.itemTrainingDistance);
+            itemTrainingPartial = itemView.findViewById(R.id.itemTrainingPartial);
+            ibOptionsTraining = itemView.findViewById(R.id.ibOptionsTraining);
         }
     }
 

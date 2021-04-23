@@ -34,7 +34,7 @@ public class NewTrainingActivity extends AppCompatActivity {
     TextInputLayout trainingTimeText, trainingDistanceText;
     EditText trainingDateText;
     Button btnAddSeries;
-    TextView tvListSeries;
+    TextView tvListSeries, tvListSeriesSaved;
 
     AppDatabase db;
     String license;
@@ -82,6 +82,7 @@ public class NewTrainingActivity extends AppCompatActivity {
         listSeries = new ArrayList<>();
 
         tvListSeries = findViewById(R.id.tvListSeries);
+        tvListSeriesSaved = findViewById(R.id.tvListSeriesSaved);
 
         trainingDateText = findViewById(R.id.trainingDateText);
         trainingTimeText = findViewById(R.id.trainingTimeText);
@@ -92,8 +93,10 @@ public class NewTrainingActivity extends AppCompatActivity {
                 AppDatabase.class, "database-name").fallbackToDestructiveMigration().allowMainThreadQueries().build();
 
         if (!isNew) {
+            getSupportActionBar().setTitle("Entrenamiento");
             loadTraining();
         } else {
+            getSupportActionBar().setTitle("Nuevo entrenamiento");
             trainingDateText.setText(dateSelected);
         }
 
@@ -108,6 +111,11 @@ public class NewTrainingActivity extends AppCompatActivity {
         trainingDateText.setText(Utils.toString(training.date));
         trainingTimeText.getEditText().setText(training.warmup.time);
         trainingDistanceText.getEditText().setText(training.warmup.distance);
+
+        if (db.seriesDao().getSeriesByTraining(id).size() > 0) {
+            List<Series> listSeriesTraining = db.seriesDao().getSeriesByTraining(id);
+            showSeriesForUpdate(listSeriesTraining);
+        }
     }
 
     private void saveTraining() {
@@ -121,22 +129,27 @@ public class NewTrainingActivity extends AppCompatActivity {
         if (validateNewTraining(date, time, distance)) {
             if (Utils.validateDateFormat(date)) {
                 Warmup warmup = new Warmup(time, distance, Utils.calculatePartial(time, distance));
-                Training training = new Training(license, Utils.toDate(date), warmup);
+                Training training = new Training(license, Utils.toDate(date), warmup, 0);
 
                 if (isNew) {
                     db.trainingDao().insert(training);
+                    Training lastTraining = db.trainingDao().getLastTraining().get(0);
                     if (!listSeries.isEmpty()) {
+                        db.trainingDao().updateSeries(license, lastTraining.idTraining);
                         for (SeriesDto seriesDto : listSeries) {
-                            Series series = new Series();
-                            series.license = license;
-                            series.distance = seriesDto.distance;
-                            series.time = seriesDto.time;
-                            series.date = training.date;
+                            Series series = new Series(lastTraining.idTraining, license, seriesDto.distance, seriesDto.time, training.date);
                             db.seriesDao().insert(series);
                         }
                     }
                 } else {
                     db.trainingDao().update(warmup.distance, warmup.time, warmup.partial, license, id);
+                    if (!listSeries.isEmpty()) {
+                        db.trainingDao().updateSeries(license, id);
+                        for (SeriesDto seriesDto : listSeries) {
+                            Series series = new Series(id, license, seriesDto.distance, seriesDto.time, training.date);
+                            db.seriesDao().insert(series);
+                        }
+                    }
                 }
 
                 Intent intent = new Intent(this, MainActivity.class);
@@ -187,11 +200,22 @@ public class NewTrainingActivity extends AppCompatActivity {
     }
 
     private void showSeries() {
-        String txt = "";
+        tvListSeries.setVisibility(View.VISIBLE);
+        String txt = "Series a añadir: ";
 
         for (SeriesDto dto : listSeries) {
             txt += "[" + dto.distance + ", " + dto.time + "] ";
             tvListSeries.setText(txt);
+        }
+    }
+
+    private void showSeriesForUpdate(List<Series> listSeriesTraining) {
+        tvListSeriesSaved.setVisibility(View.VISIBLE);
+        String txt = "Series guardadas: ";
+
+        for (Series series : listSeriesTraining) {
+            txt += "[" + series.distance + ", " + series.time + "] ";
+            tvListSeriesSaved.setText(txt);
         }
     }
 
