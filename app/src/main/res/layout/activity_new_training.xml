@@ -74,7 +74,7 @@
         app:layout_constraintTop_toBottomOf="@+id/trainingDistanceText" />
 
     <TextView
-        android:id="@+id/tvListSeriesSaved"
+        android:id="@+id/tvListSeries"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -83,12 +83,24 @@
         android:visibility="invisible"/>
 
     <TextView
-        android:id="@+id/tvListSeries"
+        android:id="@+id/tvListSeriesTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="@+id/tvListSeriesSaved"
-        app:layout_constraintTop_toBottomOf="@+id/tvListSeriesSaved"
+        app:layout_constraintStart_toStartOf="@+id/tvListSeries"
+        app:layout_constraintTop_toBottomOf="@+id/tvListSeries"
+        android:text="Series"
+        android:textSize="18sp"
+        android:textStyle="bold"
         android:visibility="invisible"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvSeries"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvListSeriesTitle" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

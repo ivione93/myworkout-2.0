@@ -20,7 +20,6 @@ import androidx.room.Room;
 import com.ivione93.myworkout.R;
 import com.ivione93.myworkout.Utils;
 import com.ivione93.myworkout.db.AppDatabase;
-import com.ivione93.myworkout.db.Series;
 import com.ivione93.myworkout.db.Training;
 
 import java.text.DateFormat;
@@ -35,7 +34,6 @@ public class TrainingsFragment extends Fragment {
     private TrainingsViewModel dashboardViewModel;
 
     private List<Training> listTrainings = new ArrayList<>();
-    private List<Series> listSeries = new ArrayList<>();
     private AdapterTraining adapterTraining;
 
     CalendarView calendarTrainings;
@@ -60,8 +58,6 @@ public class TrainingsFragment extends Fragment {
         license = getActivity().getIntent().getStringExtra("license");
         listTrainings.clear();
         listTrainings.addAll(db.trainingDao().getTrainingByLicense(license));
-        listSeries.clear();
-        listSeries.addAll(db.seriesDao().getSeriesByLicense(license));
 
         initReferences(root);
         setUpRecyclerView(root);

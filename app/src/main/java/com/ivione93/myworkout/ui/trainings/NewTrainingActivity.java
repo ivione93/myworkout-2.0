@@ -14,6 +14,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import com.google.android.material.textfield.TextInputLayout;
@@ -31,10 +33,14 @@ import java.util.List;
 
 public class NewTrainingActivity extends AppCompatActivity {
 
+    private List<Series> listSeries = new ArrayList<>();
+    private AdapterSeries adapterSeries;
+
     TextInputLayout trainingTimeText, trainingDistanceText;
     EditText trainingDateText;
     Button btnAddSeries;
-    TextView tvListSeries, tvListSeriesSaved;
+    TextView tvListSeries, tvListSeriesTitle;
+    RecyclerView rvSeries;
 
     AppDatabase db;
     String license;
@@ -42,7 +48,7 @@ public class NewTrainingActivity extends AppCompatActivity {
     Long id;
     Boolean isNew;
 
-    List<SeriesDto> listSeries;
+    List<SeriesDto> listSeriesDto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,11 +57,22 @@ public class NewTrainingActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        db = Room.databaseBuilder(this,
+                AppDatabase.class, "database-name").fallbackToDestructiveMigration().allowMainThreadQueries().build();
+
         license = getIntent().getStringExtra("license");
         dateSelected = getIntent().getStringExtra("dateSelected");
         isNew = getIntent().getBooleanExtra("isNew", true);
 
+        listSeries.clear();
+
+        if (!isNew) {
+            id = getIntent().getLongExtra("id", 0);
+            listSeries.addAll(db.seriesDao().getSeriesByTraining(id));
+        }
+
         initReferences(isNew);
+        setUpRecyclerView();
     }
 
     @Override
@@ -79,15 +96,17 @@ public class NewTrainingActivity extends AppCompatActivity {
     }
 
     private void initReferences(boolean isNew) {
-        listSeries = new ArrayList<>();
+        listSeriesDto = new ArrayList<>();
 
         tvListSeries = findViewById(R.id.tvListSeries);
-        tvListSeriesSaved = findViewById(R.id.tvListSeriesSaved);
+        tvListSeriesTitle = findViewById(R.id.tvListSeriesTitle);
 
         trainingDateText = findViewById(R.id.trainingDateText);
         trainingTimeText = findViewById(R.id.trainingTimeText);
         trainingDistanceText = findViewById(R.id.trainingDistanceText);
         btnAddSeries = findViewById(R.id.btnAddSeries);
+
+        rvSeries = findViewById(R.id.rvSeries);
 
         db = Room.databaseBuilder(getApplicationContext(),
                 AppDatabase.class, "database-name").fallbackToDestructiveMigration().allowMainThreadQueries().build();
@@ -105,16 +124,23 @@ public class NewTrainingActivity extends AppCompatActivity {
         });
     }
 
+    private void setUpRecyclerView() {
+        rvSeries = findViewById(R.id.rvSeries);
+        rvSeries.setHasFixedSize(true);
+        adapterSeries = new AdapterSeries(listSeries);
+
+        rvSeries.setLayoutManager(new LinearLayoutManager(this));
+        rvSeries.setAdapter(adapterSeries);
+    }
+
     private void loadTraining() {
-        id = getIntent().getLongExtra("id", 0);
         Training training = db.trainingDao().getTrainingToEdit(license, id);
         trainingDateText.setText(Utils.toString(training.date));
         trainingTimeText.getEditText().setText(training.warmup.time);
         trainingDistanceText.getEditText().setText(training.warmup.distance);
 
         if (db.seriesDao().getSeriesByTraining(id).size() > 0) {
-            List<Series> listSeriesTraining = db.seriesDao().getSeriesByTraining(id);
-            showSeriesForUpdate(listSeriesTraining);
+            tvListSeriesTitle.setVisibility(View.VISIBLE);
         }
     }
 
@@ -134,18 +160,18 @@ public class NewTrainingActivity extends AppCompatActivity {
                 if (isNew) {
                     db.trainingDao().insert(training);
                     Training lastTraining = db.trainingDao().getLastTraining().get(0);
-                    if (!listSeries.isEmpty()) {
+                    if (!listSeriesDto.isEmpty()) {
                         db.trainingDao().updateSeries(license, lastTraining.idTraining);
-                        for (SeriesDto seriesDto : listSeries) {
+                        for (SeriesDto seriesDto : listSeriesDto) {
                             Series series = new Series(lastTraining.idTraining, license, seriesDto.distance, seriesDto.time, training.date);
                             db.seriesDao().insert(series);
                         }
                     }
                 } else {
                     db.trainingDao().update(warmup.distance, warmup.time, warmup.partial, license, id);
-                    if (!listSeries.isEmpty()) {
+                    if (!listSeriesDto.isEmpty()) {
                         db.trainingDao().updateSeries(license, id);
-                        for (SeriesDto seriesDto : listSeries) {
+                        for (SeriesDto seriesDto : listSeriesDto) {
                             Series series = new Series(id, license, seriesDto.distance, seriesDto.time, training.date);
                             db.seriesDao().insert(series);
                         }
@@ -195,7 +221,7 @@ public class NewTrainingActivity extends AppCompatActivity {
             Toast.makeText(v.getContext(), "Campos incompletos", Toast.LENGTH_LONG).show();
         } else {
             SeriesDto seriesDto = new SeriesDto(distance, time);
-            listSeries.add(seriesDto);
+            listSeriesDto.add(seriesDto);
         }
     }
 
@@ -203,19 +229,9 @@ public class NewTrainingActivity extends AppCompatActivity {
         tvListSeries.setVisibility(View.VISIBLE);
         String txt = "Series a añadir: ";
 
-        for (SeriesDto dto : listSeries) {
+        for (SeriesDto dto : listSeriesDto) {
             txt += "[" + dto.distance + ", " + dto.time + "] ";
             tvListSeries.setText(txt);
-        }
-    }
-
-    private void showSeriesForUpdate(List<Series> listSeriesTraining) {
-        tvListSeriesSaved.setVisibility(View.VISIBLE);
-        String txt = "Series guardadas: ";
-
-        for (Series series : listSeriesTraining) {
-            txt += "[" + series.distance + ", " + series.time + "] ";
-            tvListSeriesSaved.setText(txt);
         }
     }
 
