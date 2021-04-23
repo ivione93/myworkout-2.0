@@ -1,10 +1,15 @@
 package com.ivione93.myworkout.ui.trainings;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,19 +21,28 @@ import com.ivione93.myworkout.MainActivity;
 import com.ivione93.myworkout.R;
 import com.ivione93.myworkout.Utils;
 import com.ivione93.myworkout.db.AppDatabase;
+import com.ivione93.myworkout.db.Series;
+import com.ivione93.myworkout.db.SeriesDto;
 import com.ivione93.myworkout.db.Training;
 import com.ivione93.myworkout.db.Warmup;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class NewTrainingActivity extends AppCompatActivity {
 
     TextInputLayout trainingTimeText, trainingDistanceText;
     EditText trainingDateText;
+    Button btnAddSeries;
+    TextView tvListSeries;
 
     AppDatabase db;
     String license;
     String dateSelected;
     Long id;
     Boolean isNew;
+
+    List<SeriesDto> listSeries;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,9 +79,14 @@ public class NewTrainingActivity extends AppCompatActivity {
     }
 
     private void initReferences(boolean isNew) {
+        listSeries = new ArrayList<>();
+
+        tvListSeries = findViewById(R.id.tvListSeries);
+
         trainingDateText = findViewById(R.id.trainingDateText);
         trainingTimeText = findViewById(R.id.trainingTimeText);
         trainingDistanceText = findViewById(R.id.trainingDistanceText);
+        btnAddSeries = findViewById(R.id.btnAddSeries);
 
         db = Room.databaseBuilder(getApplicationContext(),
                 AppDatabase.class, "database-name").fallbackToDestructiveMigration().allowMainThreadQueries().build();
@@ -77,6 +96,10 @@ public class NewTrainingActivity extends AppCompatActivity {
         } else {
             trainingDateText.setText(dateSelected);
         }
+
+        btnAddSeries.setOnClickListener(v -> {
+            createAddSeriesDialog().show();
+        });
     }
 
     private void loadTraining() {
@@ -102,6 +125,16 @@ public class NewTrainingActivity extends AppCompatActivity {
 
                 if (isNew) {
                     db.trainingDao().insert(training);
+                    if (!listSeries.isEmpty()) {
+                        for (SeriesDto seriesDto : listSeries) {
+                            Series series = new Series();
+                            series.license = license;
+                            series.distance = seriesDto.distance;
+                            series.time = seriesDto.time;
+                            series.date = training.date;
+                            db.seriesDao().insert(series);
+                        }
+                    }
                 } else {
                     db.trainingDao().update(warmup.distance, warmup.time, warmup.partial, license, id);
                 }
@@ -116,6 +149,49 @@ public class NewTrainingActivity extends AppCompatActivity {
         } else {
             Toast toast = Toast.makeText(getApplicationContext(), "Faltan campos por completar", Toast.LENGTH_LONG);
             toast.show();
+        }
+    }
+
+    public AlertDialog createAddSeriesDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View v = inflater.inflate(R.layout.dialog_add_series, null);
+
+        builder.setTitle("Añadir serie");
+        builder.setView(v)
+                .setPositiveButton("Añadir", (dialog, which) -> {
+                    addSeries(v);
+                    showSeries();
+                })
+                .setNegativeButton("Cancelar", (dialog, which) -> {
+
+                });
+
+        return builder.create();
+    }
+
+    private void addSeries(View v) {
+        EditText distanceSeries, timeSeries;
+        distanceSeries = v.findViewById(R.id.distance_series);
+        timeSeries = v.findViewById(R.id.time_series);
+
+        String distance = distanceSeries.getText().toString();
+        String time = timeSeries.getText().toString();
+
+        if (distance.equals("") && time.equals("")) {
+            Toast.makeText(v.getContext(), "Campos incompletos", Toast.LENGTH_LONG).show();
+        } else {
+            SeriesDto seriesDto = new SeriesDto(distance, time);
+            listSeries.add(seriesDto);
+        }
+    }
+
+    private void showSeries() {
+        String txt = "";
+
+        for (SeriesDto dto : listSeries) {
+            txt += "[" + dto.distance + ", " + dto.time + "] ";
+            tvListSeries.setText(txt);
         }
     }
 
