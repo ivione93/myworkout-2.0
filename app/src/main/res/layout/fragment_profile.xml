@@ -222,6 +222,31 @@
                 app:tint="@color/blue_primary"
                 android:visibility="invisible"/>
 
+            <TextView
+                android:id="@+id/tvIndicadorCuestas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:text="Cuestas"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="@+id/ivIndicadorSeries"
+                app:layout_constraintStart_toEndOf="@+id/ivIndicadorSeries"
+                app:layout_constraintTop_toTopOf="@+id/ivIndicadorSeries" />
+
+            <ImageView
+                android:id="@+id/ivIndicadorCuestas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:src="@drawable/ic_check"
+                app:layout_constraintBottom_toBottomOf="@+id/tvIndicadorCuestas"
+                app:layout_constraintStart_toEndOf="@+id/tvIndicadorCuestas"
+                app:layout_constraintTop_toTopOf="@+id/tvIndicadorCuestas"
+                app:tint="@color/blue_primary"
+                android:visibility="invisible"/>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
