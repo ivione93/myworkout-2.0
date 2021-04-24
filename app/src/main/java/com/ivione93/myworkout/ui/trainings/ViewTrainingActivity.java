@@ -17,15 +17,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
-import androidx.viewpager.widget.ViewPager;
 
-import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.textfield.TextInputLayout;
 import com.ivione93.myworkout.MainActivity;
 import com.ivione93.myworkout.R;
 import com.ivione93.myworkout.Utils;
 import com.ivione93.myworkout.db.AppDatabase;
+import com.ivione93.myworkout.db.Cuestas;
+import com.ivione93.myworkout.db.CuestasDto;
 import com.ivione93.myworkout.db.Series;
 import com.ivione93.myworkout.db.SeriesDto;
 import com.ivione93.myworkout.db.Training;
@@ -38,6 +38,9 @@ public class ViewTrainingActivity extends AppCompatActivity {
 
     private List<Series> listSeries = new ArrayList<>();
     private AdapterSeries adapterSeries;
+
+    private List<Cuestas> listCuestas = new ArrayList<>();
+    private AdapterCuestas adapterCuestas;
 
     TextInputLayout trainingTimeText, trainingDistanceText;
     EditText trainingDateText;
@@ -53,6 +56,7 @@ public class ViewTrainingActivity extends AppCompatActivity {
     Boolean isNew;
 
     List<SeriesDto> listSeriesDto;
+    List<CuestasDto> listCuestasDto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,14 +73,17 @@ public class ViewTrainingActivity extends AppCompatActivity {
         isNew = getIntent().getBooleanExtra("isNew", true);
 
         listSeries.clear();
+        listCuestas.clear();
 
         if (!isNew) {
             id = getIntent().getLongExtra("id", 0);
             listSeries.addAll(db.seriesDao().getSeriesByTraining(id));
+            listCuestas.addAll(db.cuestasDao().getCuestasByTraining(id));
         }
 
         initReferences(isNew);
-        setUpRecyclerView();
+        setUpRecyclerSeriesView();
+        setUpRecyclerCuestasView();
     }
 
     @Override
@@ -101,6 +108,7 @@ public class ViewTrainingActivity extends AppCompatActivity {
 
     private void initReferences(boolean isNew) {
         listSeriesDto = new ArrayList<>();
+        listCuestasDto = new ArrayList<>();
 
         tvListSeries = findViewById(R.id.tvListSeries);
 
@@ -174,13 +182,23 @@ public class ViewTrainingActivity extends AppCompatActivity {
         });
     }
 
-    private void setUpRecyclerView() {
+    private void setUpRecyclerSeriesView() {
         rvSeries = findViewById(R.id.rvSeries);
         rvSeries.setHasFixedSize(true);
         adapterSeries = new AdapterSeries(listSeries);
 
         rvSeries.setLayoutManager(new LinearLayoutManager(this));
         rvSeries.setAdapter(adapterSeries);
+    }
+
+    private void setUpRecyclerCuestasView() {
+        rvCuestas = findViewById(R.id.rvCuestas);
+        rvCuestas.setHasFixedSize(true);
+        adapterCuestas = new AdapterCuestas(listCuestas);
+
+        rvCuestas.setLayoutManager(new LinearLayoutManager(this));
+        rvCuestas.setAdapter(adapterCuestas);
+        rvCuestas.setVisibility(View.INVISIBLE);
     }
 
     private void loadTraining() {
@@ -201,7 +219,7 @@ public class ViewTrainingActivity extends AppCompatActivity {
         if (validateNewTraining(date, time, distance)) {
             if (Utils.validateDateFormat(date)) {
                 Warmup warmup = new Warmup(time, distance, Utils.calculatePartial(time, distance));
-                Training training = new Training(license, Utils.toDate(date), warmup, 0);
+                Training training = new Training(license, Utils.toDate(date), warmup, 0, 0);
 
                 if (isNew) {
                     db.trainingDao().insert(training);
@@ -213,6 +231,13 @@ public class ViewTrainingActivity extends AppCompatActivity {
                             db.seriesDao().insert(series);
                         }
                     }
+                    if (!listCuestasDto.isEmpty()) {
+                        db.trainingDao().updateCuestas(license, lastTraining.idTraining);
+                        for (CuestasDto cuestasDto : listCuestasDto) {
+                            Cuestas cuestas = new Cuestas(lastTraining.idTraining, license, cuestasDto.type, cuestasDto.times, training.date);
+                            db.cuestasDao().insert(cuestas);
+                        }
+                    }
                 } else {
                     db.trainingDao().update(warmup.distance, warmup.time, warmup.partial, license, id);
                     if (!listSeriesDto.isEmpty()) {
@@ -220,6 +245,13 @@ public class ViewTrainingActivity extends AppCompatActivity {
                         for (SeriesDto seriesDto : listSeriesDto) {
                             Series series = new Series(id, license, seriesDto.distance, seriesDto.time, training.date);
                             db.seriesDao().insert(series);
+                        }
+                    }
+                    if (!listCuestasDto.isEmpty()) {
+                        db.trainingDao().updateCuestas(license, id);
+                        for (CuestasDto cuestasDto : listCuestasDto) {
+                            Cuestas cuestas = new Cuestas(id, license, cuestasDto.type, cuestasDto.times, training.date);
+                            db.cuestasDao().insert(cuestas);
                         }
                     }
                 }
@@ -273,10 +305,10 @@ public class ViewTrainingActivity extends AppCompatActivity {
 
     private void showSeries() {
         tvListSeries.setVisibility(View.VISIBLE);
-        String txt = "Series a añadir: ";
+        String txt = tvListSeries.getText().toString();
 
         for (SeriesDto dto : listSeriesDto) {
-            txt += "[" + dto.distance + ", " + dto.time + "] ";
+            txt += "S[" + dto.distance + ", " + dto.time + "] ";
             tvListSeries.setText(txt);
         }
     }
@@ -289,12 +321,40 @@ public class ViewTrainingActivity extends AppCompatActivity {
         builder.setTitle("Añadir cuestas");
         builder.setView(v)
                 .setPositiveButton("Añadir", (dialog, which) -> {
+                    addCuestas(v);
+                    showCuestas();
                 })
                 .setNegativeButton("Cancelar", (dialog, which) -> {
 
                 });
 
         return builder.create();
+    }
+
+    private void addCuestas(View v) {
+        EditText repeticionesCuestas, tipoCuestas;
+        tipoCuestas = v.findViewById(R.id.tipoCuestas);
+        repeticionesCuestas = v.findViewById(R.id.repeticionesCuestas);
+
+        String type = tipoCuestas.getText().toString();
+        String times = repeticionesCuestas.getText().toString();
+
+        if (type.equals("") && times.equals("")) {
+            Toast.makeText(v.getContext(), "Campos incompletos", Toast.LENGTH_LONG).show();
+        } else {
+            CuestasDto cuestasDto = new CuestasDto(type, Integer.parseInt(times));
+            listCuestasDto.add(cuestasDto);
+        }
+    }
+
+    private void showCuestas() {
+        tvListSeries.setVisibility(View.VISIBLE);
+        String txt = tvListSeries.getText().toString();
+
+        for (CuestasDto dto : listCuestasDto) {
+            txt += "C[" + dto.type + ", " + dto.times + "] ";
+            tvListSeries.setText(txt);
+        }
     }
 
     public AlertDialog createAddFartlekDialog() {
@@ -325,25 +385,5 @@ public class ViewTrainingActivity extends AppCompatActivity {
             isValid = false;
         }
         return isValid;
-    }
-
-    @NonNull
-    private TabLayout.OnTabSelectedListener getOnTabSelectedListener(final ViewPager viewPager) {
-        return new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-                // nothing now
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-                // nothing now
-            }
-        };
     }
 }

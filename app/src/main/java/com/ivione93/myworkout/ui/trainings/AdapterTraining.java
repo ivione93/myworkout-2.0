@@ -85,6 +85,7 @@ public class AdapterTraining extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         case R.id.menu_delete_training:
                             db.trainingDao().deleteTrainingByLicense(listTrainings.get(position).license, listTrainings.get(position).idTraining);
                             db.seriesDao().deleteSeries(listTrainings.get(position).license, listTrainings.get(position).idTraining);
+                            db.cuestasDao().deleteCuestas(listTrainings.get(position).license, listTrainings.get(position).idTraining);
                             listTrainings.remove(position);
                             notifyItemRemoved(position);
                             return true;
