@@ -17,7 +17,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
+import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.tabs.TabItem;
+import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.textfield.TextInputLayout;
 import com.ivione93.myworkout.MainActivity;
 import com.ivione93.myworkout.R;
@@ -39,8 +42,10 @@ public class ViewTrainingActivity extends AppCompatActivity {
     TextInputLayout trainingTimeText, trainingDistanceText;
     EditText trainingDateText;
     Button btnAddSeries;
-    TextView tvListSeries, tvListSeriesTitle;
+    TextView tvListSeries;
     RecyclerView rvSeries;
+    TabLayout tabLayout;
+    TabItem tabItemSeries, tabItemCuestas, tabItemFartlek;
 
     AppDatabase db;
     String license;
@@ -53,7 +58,7 @@ public class ViewTrainingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_training);
+        setContentView(R.layout.activity_view_training);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -99,7 +104,6 @@ public class ViewTrainingActivity extends AppCompatActivity {
         listSeriesDto = new ArrayList<>();
 
         tvListSeries = findViewById(R.id.tvListSeries);
-        tvListSeriesTitle = findViewById(R.id.tvListSeriesTitle);
 
         trainingDateText = findViewById(R.id.trainingDateText);
         trainingTimeText = findViewById(R.id.trainingTimeText);
@@ -107,6 +111,34 @@ public class ViewTrainingActivity extends AppCompatActivity {
         btnAddSeries = findViewById(R.id.btnAddSeries);
 
         rvSeries = findViewById(R.id.rvSeries);
+
+        tabLayout = findViewById(R.id.tabLayout);
+        tabLayout.addTab(tabLayout.newTab().setText("Series"));
+        tabLayout.addTab(tabLayout.newTab().setText("Cuestas"));
+        tabLayout.addTab(tabLayout.newTab().setText("Fartlek"));
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                if (tab.getPosition() == 0) {
+                    rvSeries.setVisibility(View.VISIBLE);
+                } else if (tab.getPosition() == 1) {
+                    rvSeries.setVisibility(View.INVISIBLE);
+                } else if (tab.getPosition() == 2) {
+                    rvSeries.setVisibility(View.INVISIBLE);
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
 
         db = Room.databaseBuilder(getApplicationContext(),
                 AppDatabase.class, "database-name").fallbackToDestructiveMigration().allowMainThreadQueries().build();
@@ -138,10 +170,6 @@ public class ViewTrainingActivity extends AppCompatActivity {
         trainingDateText.setText(Utils.toString(training.date));
         trainingTimeText.getEditText().setText(training.warmup.time);
         trainingDistanceText.getEditText().setText(training.warmup.distance);
-
-        if (db.seriesDao().getSeriesByTraining(id).size() > 0) {
-            tvListSeriesTitle.setVisibility(View.VISIBLE);
-        }
     }
 
     private void saveTraining() {
@@ -247,5 +275,25 @@ public class ViewTrainingActivity extends AppCompatActivity {
             isValid = false;
         }
         return isValid;
+    }
+
+    @NonNull
+    private TabLayout.OnTabSelectedListener getOnTabSelectedListener(final ViewPager viewPager) {
+        return new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                // nothing now
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                // nothing now
+            }
+        };
     }
 }

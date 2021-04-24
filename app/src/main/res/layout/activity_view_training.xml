@@ -82,17 +82,23 @@
         app:layout_constraintTop_toBottomOf="@+id/btnAddSeries"
         android:visibility="invisible"/>
 
-    <TextView
-        android:id="@+id/tvListSeriesTitle"
-        android:layout_width="wrap_content"
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="@+id/tvListSeries"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvListSeries"
-        android:text="Series"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:visibility="invisible"/>
+        app:layout_constraintVertical_bias="0.0" />
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tabLayout" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvSeries"
@@ -101,6 +107,6 @@
         android:layout_marginTop="16dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvListSeriesTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/tabLayout"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
