@@ -41,11 +41,10 @@ public class ViewTrainingActivity extends AppCompatActivity {
 
     TextInputLayout trainingTimeText, trainingDistanceText;
     EditText trainingDateText;
-    Button btnAddSeries;
+    Button btnAddSeries, btnAddCuestas, btnAddFartlek;
     TextView tvListSeries;
-    RecyclerView rvSeries;
+    RecyclerView rvSeries, rvCuestas, rvFartlek;
     TabLayout tabLayout;
-    TabItem tabItemSeries, tabItemCuestas, tabItemFartlek;
 
     AppDatabase db;
     String license;
@@ -108,9 +107,14 @@ public class ViewTrainingActivity extends AppCompatActivity {
         trainingDateText = findViewById(R.id.trainingDateText);
         trainingTimeText = findViewById(R.id.trainingTimeText);
         trainingDistanceText = findViewById(R.id.trainingDistanceText);
+
         btnAddSeries = findViewById(R.id.btnAddSeries);
+        btnAddCuestas = findViewById(R.id.btnAddCuestas);
+        btnAddFartlek = findViewById(R.id.btnAddFartlek);
 
         rvSeries = findViewById(R.id.rvSeries);
+        rvCuestas = findViewById(R.id.rvCuestas);
+        rvFartlek = findViewById(R.id.rvFartlek);
 
         tabLayout = findViewById(R.id.tabLayout);
         tabLayout.addTab(tabLayout.newTab().setText("Series"));
@@ -122,10 +126,16 @@ public class ViewTrainingActivity extends AppCompatActivity {
             public void onTabSelected(TabLayout.Tab tab) {
                 if (tab.getPosition() == 0) {
                     rvSeries.setVisibility(View.VISIBLE);
+                    rvCuestas.setVisibility(View.INVISIBLE);
+                    rvFartlek.setVisibility(View.INVISIBLE);
                 } else if (tab.getPosition() == 1) {
                     rvSeries.setVisibility(View.INVISIBLE);
+                    rvCuestas.setVisibility(View.VISIBLE);
+                    rvFartlek.setVisibility(View.INVISIBLE);
                 } else if (tab.getPosition() == 2) {
                     rvSeries.setVisibility(View.INVISIBLE);
+                    rvCuestas.setVisibility(View.INVISIBLE);
+                    rvFartlek.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -153,6 +163,14 @@ public class ViewTrainingActivity extends AppCompatActivity {
 
         btnAddSeries.setOnClickListener(v -> {
             createAddSeriesDialog().show();
+        });
+
+        btnAddCuestas.setOnClickListener(v -> {
+            createAddCuestasDialog().show();
+        });
+
+        btnAddFartlek.setOnClickListener(v -> {
+            createAddFartlekDialog().show();
         });
     }
 
@@ -261,6 +279,38 @@ public class ViewTrainingActivity extends AppCompatActivity {
             txt += "[" + dto.distance + ", " + dto.time + "] ";
             tvListSeries.setText(txt);
         }
+    }
+
+    public AlertDialog createAddCuestasDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View v = inflater.inflate(R.layout.dialog_add_cuestas, null);
+
+        builder.setTitle("Añadir cuestas");
+        builder.setView(v)
+                .setPositiveButton("Añadir", (dialog, which) -> {
+                })
+                .setNegativeButton("Cancelar", (dialog, which) -> {
+
+                });
+
+        return builder.create();
+    }
+
+    public AlertDialog createAddFartlekDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View v = inflater.inflate(R.layout.dialog_add_fartlek, null);
+
+        builder.setTitle("Añadir fartlek");
+        builder.setView(v)
+                .setPositiveButton("Añadir", (dialog, which) -> {
+                })
+                .setNegativeButton("Cancelar", (dialog, which) -> {
+
+                });
+
+        return builder.create();
     }
 
     private boolean validateNewTraining(String date, String time, String distance) {
