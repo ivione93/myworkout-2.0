@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -43,6 +44,8 @@ public class ProfileFragment extends Fragment {
     TextView nameProfile, emailProfile, birthProfile, licenseProfile;
     TextView last_competition_name, last_competition_place, last_competition_date, last_competition_track, last_competition_result;
     TextView title_training, last_training_date, title_time, title_distance, title_partial, last_training_time, last_training_distance, last_training_partial;
+    TextView tvIndicadorSeries;
+    ImageView ivIndicadorSeries;
 
     GoogleSignInClient mGoogleSignInClient;
     GoogleSignInOptions gso;
@@ -155,6 +158,9 @@ public class ProfileFragment extends Fragment {
         last_training_time = root.findViewById(R.id.last_training_time);
         last_training_distance = root.findViewById(R.id.last_training_distance);
         last_training_partial = root.findViewById(R.id.last_training_partial);
+
+        tvIndicadorSeries = root.findViewById(R.id.tvIndicadorSeries);
+        ivIndicadorSeries = root.findViewById(R.id.ivIndicadorSeries);
     }
 
     private void getLastCompetition(AppDatabase db, String license) {
@@ -185,6 +191,10 @@ public class ProfileFragment extends Fragment {
             last_training_time.setText(last_training.get(0).warmup.time + " min");
             last_training_distance.setText(last_training.get(0).warmup.distance + " kms");
             last_training_partial.setText(last_training.get(0).warmup.partial + " /km");
+            if (db.seriesDao().getSeriesByTraining(last_training.get(0).idTraining).size() > 0) {
+                tvIndicadorSeries.setVisibility(View.VISIBLE);
+                ivIndicadorSeries.setVisibility(View.VISIBLE);
+            }
         }
     }
 

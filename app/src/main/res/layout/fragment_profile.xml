@@ -199,6 +199,29 @@
                 android:textStyle="bold"
                 tools:text="4:00 /km" />
 
+            <TextView
+                android:id="@+id/tvIndicadorSeries"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Series"
+                app:layout_constraintStart_toStartOf="@+id/title_training"
+                app:layout_constraintTop_toBottomOf="@+id/last_training_time"
+                android:visibility="invisible"/>
+
+            <ImageView
+                android:id="@+id/ivIndicadorSeries"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:src="@drawable/ic_check"
+                app:layout_constraintBottom_toBottomOf="@+id/tvIndicadorSeries"
+                app:layout_constraintStart_toEndOf="@+id/tvIndicadorSeries"
+                app:layout_constraintTop_toTopOf="@+id/tvIndicadorSeries"
+                app:tint="@color/blue_primary"
+                android:visibility="invisible"/>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
