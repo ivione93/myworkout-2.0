@@ -74,7 +74,7 @@ public class TrainingsFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.menu_add_training) {
-            Intent newTraining = new Intent(getActivity(), NewTrainingActivity.class);
+            Intent newTraining = new Intent(getActivity(), ViewTrainingActivity.class);
             newTraining.putExtra("license", license);
             newTraining.putExtra("dateSelected", dateSelected);
             getContext().startActivity(newTraining);

@@ -30,7 +30,7 @@ import com.ivione93.myworkout.db.Competition;
 import com.ivione93.myworkout.db.Training;
 import com.ivione93.myworkout.ui.competitions.NewCompetitionActivity;
 import com.ivione93.myworkout.ui.login.LoginActivity;
-import com.ivione93.myworkout.ui.trainings.NewTrainingActivity;
+import com.ivione93.myworkout.ui.trainings.ViewTrainingActivity;
 
 import java.util.List;
 
@@ -120,7 +120,7 @@ public class ProfileFragment extends Fragment {
             return true;
         }
         if (item.getItemId() == R.id.menu_add_training_profile) {
-            Intent newTraining = new Intent(getActivity(), NewTrainingActivity.class);
+            Intent newTraining = new Intent(getActivity(), ViewTrainingActivity.class);
             newTraining.putExtra("license", license);
             getContext().startActivity(newTraining);
         }

@@ -76,7 +76,7 @@ public class AdapterTraining extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 popup.setOnMenuItemClickListener(item -> {
                     switch (item.getItemId()) {
                         case R.id.menu_edit_training:
-                            Intent newTraining = new Intent(holder.itemView.getContext(), NewTrainingActivity.class);
+                            Intent newTraining = new Intent(holder.itemView.getContext(), ViewTrainingActivity.class);
                             newTraining.putExtra("isNew", false);
                             newTraining.putExtra("license", listTrainings.get(position).license);
                             newTraining.putExtra("id", listTrainings.get(position).idTraining);
@@ -107,7 +107,7 @@ public class AdapterTraining extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 popup.setOnMenuItemClickListener(item -> {
                     switch (item.getItemId()) {
                         case R.id.menu_edit_training:
-                            Intent newTraining = new Intent(holder.itemView.getContext(), NewTrainingActivity.class);
+                            Intent newTraining = new Intent(holder.itemView.getContext(), ViewTrainingActivity.class);
                             newTraining.putExtra("isNew", false);
                             newTraining.putExtra("license", listTrainings.get(position).license);
                             newTraining.putExtra("id", listTrainings.get(position).idTraining);

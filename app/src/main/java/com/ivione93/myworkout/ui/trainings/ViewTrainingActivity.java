@@ -31,7 +31,7 @@ import com.ivione93.myworkout.db.Warmup;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewTrainingActivity extends AppCompatActivity {
+public class ViewTrainingActivity extends AppCompatActivity {
 
     private List<Series> listSeries = new ArrayList<>();
     private AdapterSeries adapterSeries;

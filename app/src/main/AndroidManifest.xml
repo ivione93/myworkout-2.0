@@ -41,7 +41,7 @@
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.trainings.NewTrainingActivity"
+            android:name=".ui.trainings.ViewTrainingActivity"
             android:label="@string/title_activity_new_training"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait" />
