@@ -1,6 +1,8 @@
 package com.ivione93.myworkout.ui.profile;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,6 +24,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.ivione93.myworkout.R;
 import com.ivione93.myworkout.Utils;
 import com.ivione93.myworkout.db.AppDatabase;
@@ -39,6 +42,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ProfileFragment extends Fragment {
 
     private ProfileViewModel profileViewModel;
+    private SharedPreferences.Editor prefs;
 
     CircleImageView photoProfile;
     TextView nameProfile, emailProfile, birthProfile, licenseProfile;
@@ -101,6 +105,11 @@ public class ProfileFragment extends Fragment {
             emailProfile.setText(account.getEmail());
             licenseProfile.setText(athlete.license);
             birthProfile.setText(Utils.toString(athlete.birthday));
+
+            // Guardado de datos inicio de sesion
+            prefs = getActivity().getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE).edit();
+            prefs.putString("license", license);
+            prefs.apply();
         }
     }
 
@@ -131,6 +140,11 @@ public class ProfileFragment extends Fragment {
             getContext().startActivity(newCompetition);
         }
         if (item.getItemId() == R.id.menu_log_out) {
+            // Borrado datos inicio de sesion
+            prefs = getActivity().getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE).edit();
+            prefs.clear();
+            prefs.apply();
+
             signOut();
             return true;
         }
@@ -205,6 +219,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void signOut() {
+        //FirebaseAuth.getInstance().signOut();
         mGoogleSignInClient.signOut()
                 .addOnCompleteListener(getActivity(), task -> {
                     Intent mainIntent = new Intent(getActivity().getApplicationContext(), LoginActivity.class);
