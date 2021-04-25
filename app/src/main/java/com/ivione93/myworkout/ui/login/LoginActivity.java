@@ -1,22 +1,19 @@
 package com.ivione93.myworkout.ui.login;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.StringRes;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -24,35 +21,36 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.SignInButton;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.ivione93.myworkout.MainActivity;
-import com.ivione93.myworkout.ui.profile.NewAthleteActivity;
 import com.ivione93.myworkout.R;
+import com.ivione93.myworkout.ui.profile.NewAthleteActivity;
 
 import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private static final int RC_SIGN_IN = 111;
-    private LoginViewModel loginViewModel;
+    private SharedPreferences prefs;
 
+    EditText emailLogin, passwordLogin;
+    Button btnLogin, btnRegister;
+    ConstraintLayout loginLayout;
+
+    private static final int RC_SIGN_IN = 111;
     private GoogleSignInClient mGoogleSignInClient;
     private TextView createdBy;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
         getSupportActionBar().hide();
         getIntent().removeExtra("license");
-
-        loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
-                .get(LoginViewModel.class);
-
-        final EditText usernameEditText = findViewById(R.id.username);
-        final EditText passwordEditText = findViewById(R.id.password);
-        final Button loginButton = findViewById(R.id.login);
-        final ProgressBar loadingProgressBar = findViewById(R.id.loading);
+        
+        initReferences();
+        checkSession();
 
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
@@ -77,81 +75,58 @@ public class LoginActivity extends AppCompatActivity {
             intent.setData(uri);
             startActivity(intent);
         });
-
-        loginViewModel.getLoginFormState().observe(this, loginFormState -> {
-            if (loginFormState == null) {
-                return;
-            }
-            loginButton.setEnabled(loginFormState.isDataValid());
-            if (loginFormState.getUsernameError() != null) {
-                usernameEditText.setError(getString(loginFormState.getUsernameError()));
-            }
-            if (loginFormState.getPasswordError() != null) {
-                passwordEditText.setError(getString(loginFormState.getPasswordError()));
-            }
-        });
-
-        loginViewModel.getLoginResult().observe(this, loginResult -> {
-            if (loginResult == null) {
-                return;
-            }
-            loadingProgressBar.setVisibility(View.GONE);
-            if (loginResult.getError() != null) {
-                showLoginFailed(loginResult.getError());
-            }
-            if (loginResult.getSuccess() != null) {
-                updateUiWithUser(loginResult.getSuccess());
-            }
-            setResult(Activity.RESULT_OK);
-        });
-
-        TextWatcher afterTextChangedListener = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // ignore
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // ignore
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                loginViewModel.loginDataChanged(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
-            }
-        };
-        usernameEditText.addTextChangedListener(afterTextChangedListener);
-        passwordEditText.addTextChangedListener(afterTextChangedListener);
-        passwordEditText.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                loginViewModel.login(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
-            }
-            return false;
-        });
-
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadingProgressBar.setVisibility(View.VISIBLE);
-                loginViewModel.login(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
-            }
-        });
     }
 
-    private void updateUiWithUser(LoggedInUserView model) {
-        Intent profileActivity = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(profileActivity);
-        //String welcome = getString(R.string.welcome) + model.getDisplayName();
-        // TODO : initiate successful logged in experience
-        //Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
+    @Override
+    protected void onStart() {
+        super.onStart();
+        loginLayout.setVisibility(View.VISIBLE);
     }
 
-    private void showLoginFailed(@StringRes Integer errorString) {
-        Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
+    private void initReferences() {
+        emailLogin = findViewById(R.id.emailLogin);
+        passwordLogin = findViewById(R.id.passwordLogin);
+        btnLogin = findViewById(R.id.btnLogin);
+        btnRegister = findViewById(R.id.btnRegister);
+        loginLayout = findViewById(R.id.loginLayout);
+
+        /*btnRegister.setOnClickListener(v -> {
+            if (!emailLogin.getText().toString().isEmpty() && !passwordLogin.getText().toString().isEmpty()) {
+                FirebaseAuth.getInstance().createUserWithEmailAndPassword(emailLogin.getText().toString(),
+                        passwordLogin.getText().toString()).addOnCompleteListener(it -> {
+                            if (it.isSuccessful()) {
+                                updateUI();
+                            } else {
+                                showAlert();
+                            }
+                });
+            }
+        });
+
+        btnLogin.setOnClickListener(v -> {
+            if (!emailLogin.getText().toString().isEmpty() && !passwordLogin.getText().toString().isEmpty()) {
+                FirebaseAuth.getInstance().signInWithEmailAndPassword(emailLogin.getText().toString(),
+                        passwordLogin.getText().toString()).addOnCompleteListener(it -> {
+                    if (it.isSuccessful()) {
+                        updateUI();
+                    } else {
+                        showAlert();
+                    }
+                });
+            }
+        });*/
+    }
+
+    private void checkSession() {
+        prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE);
+        String license = prefs.getString("license", null);
+
+        if (license != null) {
+            loginLayout.setVisibility(View.INVISIBLE);
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("license", license);
+            startActivity(intent);
+        }
     }
 
     private void signIn() {
@@ -184,5 +159,12 @@ public class LoginActivity extends AppCompatActivity {
         Intent mainIntent = new Intent(this, NewAthleteActivity.class);
         mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(mainIntent);
+    }
+
+    private void showAlert() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Error");
+        builder.setMessage("Se ha producido un error en la autenticación");
+        builder.create().show();
     }
 }

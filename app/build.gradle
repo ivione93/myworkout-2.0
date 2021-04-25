@@ -53,6 +53,7 @@ dependencies {
     annotationProcessor "androidx.room:room-compiler:$room_version"
 
     // google
+    implementation 'com.google.firebase:firebase-auth:19.3.0'
     implementation 'com.google.android.gms:play-services-auth:19.0.0'
 
     // glide
