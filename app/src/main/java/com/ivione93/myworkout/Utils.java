@@ -39,8 +39,14 @@ public class Utils {
         String str = String.valueOf(bRitmo);
         int decNumberInt = Integer.parseInt(str.substring(str.indexOf('.') + 1));
         int sec = (60 * decNumberInt) / 100;
+        String seg = "";
+        if (sec < 10) {
+            seg = "0" + sec;
+        } else {
+            seg = "" + sec;
+        }
 
-        sRitmo = iRitmo + "." + sec;
+        sRitmo = iRitmo + "." + seg;
 
         return sRitmo;
     }
