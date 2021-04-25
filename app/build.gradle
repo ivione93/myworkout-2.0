@@ -7,7 +7,7 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "com.ivione93.mynavapp"
+        applicationId "com.ivione93.myworkout"
         minSdkVersion 16
         targetSdkVersion 30
         versionCode 1
