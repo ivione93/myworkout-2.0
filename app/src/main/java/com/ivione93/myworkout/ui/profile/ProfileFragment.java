@@ -30,7 +30,7 @@ import com.ivione93.myworkout.db.Competition;
 import com.ivione93.myworkout.db.Training;
 import com.ivione93.myworkout.ui.competitions.NewCompetitionActivity;
 import com.ivione93.myworkout.ui.login.LoginActivity;
-import com.ivione93.myworkout.ui.trainings.NewTrainingActivity;
+import com.ivione93.myworkout.ui.trainings.ViewTrainingActivity;
 
 import java.util.List;
 
@@ -44,8 +44,8 @@ public class ProfileFragment extends Fragment {
     TextView nameProfile, emailProfile, birthProfile, licenseProfile;
     TextView last_competition_name, last_competition_place, last_competition_date, last_competition_track, last_competition_result;
     TextView title_training, last_training_date, title_time, title_distance, title_partial, last_training_time, last_training_distance, last_training_partial;
-    TextView tvIndicadorSeries;
-    ImageView ivIndicadorSeries;
+    TextView tvIndicadorSeries, tvIndicadorCuestas;
+    ImageView ivIndicadorSeries, ivIndicadorCuestas;
 
     GoogleSignInClient mGoogleSignInClient;
     GoogleSignInOptions gso;
@@ -120,7 +120,7 @@ public class ProfileFragment extends Fragment {
             return true;
         }
         if (item.getItemId() == R.id.menu_add_training_profile) {
-            Intent newTraining = new Intent(getActivity(), NewTrainingActivity.class);
+            Intent newTraining = new Intent(getActivity(), ViewTrainingActivity.class);
             newTraining.putExtra("license", license);
             getContext().startActivity(newTraining);
         }
@@ -161,6 +161,8 @@ public class ProfileFragment extends Fragment {
 
         tvIndicadorSeries = root.findViewById(R.id.tvIndicadorSeries);
         ivIndicadorSeries = root.findViewById(R.id.ivIndicadorSeries);
+        tvIndicadorCuestas = root.findViewById(R.id.tvIndicadorCuestas);
+        ivIndicadorCuestas = root.findViewById(R.id.ivIndicadorCuestas);
     }
 
     private void getLastCompetition(AppDatabase db, String license) {
@@ -194,6 +196,10 @@ public class ProfileFragment extends Fragment {
             if (db.seriesDao().getSeriesByTraining(last_training.get(0).idTraining).size() > 0) {
                 tvIndicadorSeries.setVisibility(View.VISIBLE);
                 ivIndicadorSeries.setVisibility(View.VISIBLE);
+            }
+            if (db.cuestasDao().getCuestasByTraining(last_training.get(0).idTraining).size() > 0) {
+                tvIndicadorCuestas.setVisibility(View.VISIBLE);
+                ivIndicadorCuestas.setVisibility(View.VISIBLE);
             }
         }
     }

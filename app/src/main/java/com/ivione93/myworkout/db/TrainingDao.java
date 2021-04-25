@@ -27,6 +27,9 @@ public interface TrainingDao {
     @Query("UPDATE training SET hasSeries = 1 WHERE license = :license AND id_training = :id")
     void updateSeries(String license, Long id);
 
+    @Query("UPDATE training SET hasCuestas = 1 WHERE license = :license AND id_training = :id")
+    void updateCuestas(String license, Long id);
+
     @Query("DELETE FROM Training WHERE license = :license AND id_training = :id")
     void deleteTrainingByLicense(String license, Long id);
 

@@ -28,10 +28,14 @@ public class Training {
     @ColumnInfo(name = "hasSeries")
     public Integer hasSeries;
 
-    public Training(String license, Date date, Warmup warmup, Integer hasSeries) {
+    @ColumnInfo(name = "hasCuestas")
+    public Integer hasCuestas;
+
+    public Training(String license, Date date, Warmup warmup, Integer hasSeries, Integer hasCuestas) {
         this.license = license;
         this.date = date;
         this.warmup = warmup;
         this.hasSeries = hasSeries;
+        this.hasCuestas = hasCuestas;
     }
 }
