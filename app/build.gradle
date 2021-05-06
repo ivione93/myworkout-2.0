@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.application'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -14,6 +15,8 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -52,10 +55,15 @@ dependencies {
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
 
-    // google
-    implementation 'com.google.firebase:firebase-auth:19.3.0'
-    implementation 'com.google.android.gms:play-services-auth:19.0.0'
-
     // glide
     implementation 'com.github.bumptech.glide:glide:4.12.0'
+
+    // multidex
+    implementation 'androidx.multidex:multidex:2.0.1'
+
+    // firebase
+    implementation platform('com.google.firebase:firebase-bom:27.1.0')
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-auth:19.3.0'
+    implementation 'com.google.android.gms:play-services-auth:19.0.0'
 }

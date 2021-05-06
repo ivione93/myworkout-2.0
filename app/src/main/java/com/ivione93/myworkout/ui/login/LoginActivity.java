@@ -21,8 +21,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.SignInButton;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.ivione93.myworkout.MainActivity;
 import com.ivione93.myworkout.R;
 import com.ivione93.myworkout.ui.profile.NewAthleteActivity;
@@ -39,6 +38,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 111;
     private GoogleSignInClient mGoogleSignInClient;
+    private FirebaseAnalytics mFirebaseAnalytics;
+
     private TextView createdBy;
 
     @Override
@@ -48,6 +49,12 @@ public class LoginActivity extends AppCompatActivity {
 
         getSupportActionBar().hide();
         getIntent().removeExtra("license");
+
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        Bundle bundle = new Bundle();
+        bundle.putString("message", "Integración de Firebase completa");
+        mFirebaseAnalytics.logEvent("InitScreen", bundle);
         
         initReferences();
         checkSession();

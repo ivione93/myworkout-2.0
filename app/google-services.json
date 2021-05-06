@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "723432603639",
+    "project_id": "hojadelmes-2021",
+    "storage_bucket": "hojadelmes-2021.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:723432603639:android:da25a14e9a1b2927d9f8f2",
+        "android_client_info": {
+          "package_name": "com.ivione93.myworkout"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "723432603639-j7daa3rpqf95b2n8ikrm2nk2v0vmacrj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBe5f1DdqSctVNFoPmQDgEh_Wmxo-Kb7WI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "723432603639-j7daa3rpqf95b2n8ikrm2nk2v0vmacrj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
