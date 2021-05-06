@@ -87,9 +87,17 @@ public class TrainingsFragment extends Fragment {
         calendarTrainings.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
             month += 1;
             if (month < 10) {
-                dateSelected = dayOfMonth + "/0" + month + "/" + year;
+                if (dayOfMonth < 10) {
+                    dateSelected = "0" + dayOfMonth + "/0" + month + "/" + year;
+                } else {
+                    dateSelected = dayOfMonth + "/0" + month + "/" + year;
+                }
             } else {
-                dateSelected = dayOfMonth + "/" + month + "/" + year;
+                if (dayOfMonth < 10) {
+                    dateSelected = "0" + dayOfMonth + "/" + month + "/" + year;
+                } else {
+                    dateSelected = dayOfMonth + "/" + month + "/" + year;
+                }
             }
             adapterTraining.getFilter().filter(dateSelected);
         });
